@@ -6,7 +6,8 @@ Rep for snakes &amp; ladders game
 - [ ] Piece selection
 - [ ] Selection and overview sync
 - [ ] Lock / unlock
-- [ ] Start button
+- [x] Start button
+- [ ] Spawn pieces
 - [ ] Match layout
 - [ ] Fix dice
 - [ ] Limit name char
