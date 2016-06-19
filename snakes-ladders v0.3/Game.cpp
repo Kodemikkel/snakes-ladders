@@ -5,6 +5,7 @@
 #include "Arrow.h"
 #include "Selection.h"
 #include "TextBox.h"
+#include "Board.h"
 #include <QGraphicsTextItem>
 #include <QPixmap>
 #include <QFontDatabase>
@@ -159,17 +160,8 @@ void Game::displayMatchConfig(int players) {
     overviewBox->setRect(0, 0, 782, 686);
     scene->addItem(overviewBox);
 
-// Create the playername textbox
-
+// Create the player selection section
     for(int i = 1; i <= players; i++) {
-        /*
-        TextBox* textBox = new TextBox("Player " + numName);
-        Button * lockButton = new Button("Lock selection", 100, 27);
-        textBox->setPos(750, 400 * .32 * i);
-        lockButton->setPos(1065, 400 * .32 * i);
-        scene->addItem(textBox);
-        scene->addItem(lockButton);
-        */
         Container * selContainer = new Container();
         selContainer->Selection(i);
         selContainer->setPos(50, 70 + 110 * (i - 1));
@@ -177,7 +169,6 @@ void Game::displayMatchConfig(int players) {
         Container * ovContainer = new Container(overviewBox);
         ovContainer->Overview(i);
         ovContainer->setPos(0, 0 + 110 * (i - 1));
-        scene->addItem(ovContainer);
     }
 
     overviewBox->setPos(818, 70);
@@ -254,114 +245,9 @@ void Game::back() {
 }
 
 void Game::drawBoard(int boardPosX, int boardPosY) {
-
-// Array to map the board. Which tile goes where?
-    const int boardArray[30][30] {
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 4,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-    };
-
-// Set the sprite positions
-    int spriteX[3];
-    int spriteY = 0;
-
-// Set the correct number
-    int tileNumX = 0;
-    int tileNumY = 192;
-    int tileNumVal = 0;
-
-// Scale the board - 1 = 64x64
-    float scaleX = 0.4375;
-    float scaleY = 0.4375;
-    float tileNumScaleX = scaleX * 1;
-    float tileNumScaleY = scaleY * 1;
-
-    for(int i = 0; i < 30; i++) {
-        for(int j = 0; j < 30; j++) {
-            switch(boardArray[i][j]) {
-                case 0:
-                    spriteX[0] = {0};
-                    spriteX[1] = {832};
-                    spriteX[2] = {NULL};
-                    break;
-                case 1:
-                    spriteX[0] = {64};
-                    spriteX[1] = {NULL};
-                    spriteX[2] = {NULL};
-                    break;
-                case 2:
-                    spriteX[0] = {128};
-                    spriteX[1] = {960};
-                    spriteX[2] = {NULL};
-                    break;
-                case 3:
-                    spriteX[0] = {192};
-                    spriteX[1] = {960};
-                    spriteX[2] = {NULL};
-                    break;
-                case 4:
-                    spriteX[0] = {256};
-                    spriteX[1] = {832};
-                    spriteX[2] = {NULL};
-                    break;
-                case 5:
-                    spriteX[0] = {320};
-                    spriteX[1] = {NULL};
-                    spriteX[2] = {NULL};
-                    break;
-            }
-            if(j % 3 == 0) {
-                spriteX[2] = 768;
-            }
-            if(j % 3 == 2) {
-                spriteX[2] = 896;
-            }
-
-// Create the tile object with the specified properties, and add it to the scene
-            for(int k = 0; k < sizeof(spriteX)/sizeof(*spriteX); k++) {
-                if(spriteX[k] != NULL || k == 0) {
-                    Tile* tile = new Tile(scaleX * 64 * j + boardPosX, scaleY * 64 * i + boardPosY, spriteX[k], spriteY, scaleX, scaleY);
-                    if(j % 3 == 0 && spriteX[k] == 960) {
-                        tile->drawTileNum(scaleX * 64 * j + boardPosX, scaleY * 64 * i + boardPosY, tileNumX, tileNumY, tileNumScaleX, tileNumScaleY);
-                        tileNumX = tileNumX + 64;
-                        if(tileNumX == 640) {
-                            tileNumX = 0;
-                            tileNumY = tileNumY + 64;
-                        }
-                    }
-                    scene->addItem(tile);
-                }
-            }
-        }
-    }
+    Board * board = new Board(1, boardPosX, boardPosY, .4375, .4375);
+    board->drawBoard();
+    scene->addItem(board);
 }
 
 void Game::drawGUI() {

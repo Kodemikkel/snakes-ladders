@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     Dice.cpp \
     Arrow.cpp \
     Selection.cpp \
-    TextBox.cpp
+    TextBox.cpp \
+    Board.cpp
 
 HEADERS  += \
     Button.h \
@@ -32,7 +33,8 @@ HEADERS  += \
     Dice.h \
     Arrow.h \
     Selection.h \
-    TextBox.h
+    TextBox.h \
+    Board.h
 
 FORMS    +=
 
