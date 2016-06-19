@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include "TextBox.h"
 #include "Tile.h"
 
 class Game: public QGraphicsView {
@@ -18,6 +19,10 @@ public:
     QGraphicsScene* scene;
     Tile* tile;
     Piece* piece;
+
+    int players;
+
+    QMap<QString, TextBox*> textBoxes;
 
 public slots:
     void start();

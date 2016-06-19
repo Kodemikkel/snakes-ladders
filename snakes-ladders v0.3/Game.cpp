@@ -153,6 +153,8 @@ void Game::displayPlayerSelect() {
 }
 
 void Game::displayMatchConfig(int players) {
+    this->players = players;
+
 // Clear the screen
     scene->clear();
 
@@ -163,6 +165,7 @@ void Game::displayMatchConfig(int players) {
 // Create the player selection section
     for(int i = 1; i <= players; i++) {
         Container * selContainer = new Container();
+        this->textBoxes["Text"] = selContainer->textBox;
         selContainer->Selection(i);
         selContainer->setPos(50, 70 + 110 * (i - 1));
         scene->addItem(selContainer);
@@ -253,6 +256,20 @@ void Game::drawBoard(int boardPosX, int boardPosY) {
 void Game::drawGUI() {
     drawBoard(30, 30);
     drawDice(); // 1300, 725, 100, 100
+
+    QGraphicsRectItem * overviewBox = new QGraphicsRectItem();
+    overviewBox->setRect(0, 0, 480, 686);
+    scene->addItem(overviewBox);
+
+// Create the player selection section
+    for(int i = 1; i <= this->players; i++) {
+        Container * ovContainer = new Container(overviewBox);
+        ovContainer->Overview(i);
+        ovContainer->setPos(0, 0 + 110 * (i - 1));
+    }
+    overviewBox->setPos(1120, 70);
+    //qDebug() << this->textBoxes["Text"]->getText();
+    //qDebug() << this->textBoxes;
 }
 
 void Game::drawDice() {
@@ -261,10 +278,6 @@ void Game::drawDice() {
     Dice * dice = new Dice(diceX);
     connect(dice, SIGNAL(diceClicked()), this, SLOT(rollDice()));
     scene->addItem(dice);
-
-
-
-
 }
 
 

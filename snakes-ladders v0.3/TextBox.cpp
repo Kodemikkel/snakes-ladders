@@ -30,3 +30,7 @@ void TextBox::mousePressEvent(QGraphicsSceneMouseEvent * event) {
     }
 }
 
+QString TextBox::getText() {
+    return this->playerText->toPlainText();
+}
+
