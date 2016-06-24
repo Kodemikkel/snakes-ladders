@@ -3,6 +3,7 @@ Rep for snakes &amp; ladders game
 
 ### Todo list
 
+- [ ] Clean up code
 - [ ] Piece selection
 - [x] Selection and overview sync
 - [ ] Lock / unlock
