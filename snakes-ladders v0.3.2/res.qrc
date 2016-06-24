@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/imgs">
+        <file>background.jpg</file>
+        <file>Spritesheet.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>built_titling_bd.ttf</file>
+    </qresource>
+</RCC>
