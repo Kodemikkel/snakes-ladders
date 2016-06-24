@@ -3,20 +3,20 @@ Rep for snakes &amp; ladders game
 
 ### Todo list
 
-- [ ] Clean up code
-- [ ] Piece selection
-- [x] Selection and overview sync
 - [ ] Lock / unlock
-- [x] Start button
-- [ ] Spawn pieces
-- [ ] Match layout
-- [ ] Fix dice
-- [ ] Limit name char
 - [ ] Timer w/ pause
-- [ ] Options and how-to
+- [ ] Match layout
+- [ ] Spawn pieces
+- [ ] Fix dice
 - [ ] Piece path
 - [ ] Piece movements
-- [ ] Victory
-- [ ] Achivements
 - [ ] Snakes and ladders
-- [ ] Icon
+- [ ] Limit name char
+- [ ] Clean up code
+- [ ] Victory
+- [ ] Options and how-to
+- [ ] Achivements
+- [x] Icon
+- [x] Piece selection
+- [x] Selection and overview sync
+- [x] Start button
