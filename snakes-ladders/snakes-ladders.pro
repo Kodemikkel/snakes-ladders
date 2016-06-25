@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     TextBox.cpp \
     Board.cpp \
     GameInfo.cpp \
-    Container.cpp
+    Container.cpp \
+    Timer.cpp
 
 HEADERS  += \
     Button.h \
@@ -36,7 +37,8 @@ HEADERS  += \
     TextBox.h \
     Board.h \
     GameInfo.h \
-    Container.h
+    Container.h \
+    Timer.h
 
 FORMS    +=
 

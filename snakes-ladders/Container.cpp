@@ -17,8 +17,6 @@ Container::Container(QGraphicsItem * parent): QGraphicsRectItem(parent) {
 
 void Container::Selection(int nPlayers, int sPieceNo, QGraphicsItem *parent) {
 
-    //qDebug() << game->info->names[1];
-
     QString numName = QString::number(nPlayers);
 
     setRect(0, 0, 672, 110);
@@ -86,29 +84,22 @@ void Container::lock(int nPlayer) {
         this->textBox->editable = true;
         this->textBox->playerText->setTextInteractionFlags(Qt::TextEditorInteraction);
     }
-    qDebug() << game->info->textBoxMap[nPlayer];
-    qDebug() << game->info->names[nPlayer - 1];
 }
 
 void Container::changePieceL(int nPlayer) {
-    qDebug() << game->info->pieces[nPlayer - 1];
     Piece ** piece = game->info->piecesMap[nPlayer];
     (*piece)->setSpriteNum((*piece)->getSpriteNum() - 1);
     game->info->pieces[nPlayer - 1] = game->info->pieces[nPlayer - 1] - 1;
     if(game->info->pieces[nPlayer - 1] < 0) {
         game->info->pieces[nPlayer - 1] = 21;
     }
-    qDebug() << game->info->pieces[nPlayer - 1];
 }
 
 void Container::changePieceR(int nPlayer) {
-    qDebug() << game->info->pieces[nPlayer - 1];
     Piece ** piece = game->info->piecesMap[nPlayer];
     (*piece)->setSpriteNum((*piece)->getSpriteNum() + 1);
     game->info->pieces[nPlayer - 1] = game->info->pieces[nPlayer - 1] + 1;
     if(game->info->pieces[nPlayer - 1] > 21) {
         game->info->pieces[nPlayer - 1] = 0;
     }
-    qDebug() << game->info->pieces[nPlayer - 1];
-    qDebug() << sender();
 }

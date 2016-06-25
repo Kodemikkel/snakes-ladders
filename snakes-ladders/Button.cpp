@@ -7,9 +7,9 @@
 #include <QDebug>
 
 
-Button::Button(QString name, int w, int h, QGraphicsItem *parent): QGraphicsRectItem(parent) {
+Button::Button(QString name, int w, int h, QGraphicsItem * parent): QGraphicsRectItem(parent) {
 // Draw the button
-    setRect(0,0,w,h);
+    setRect(0, 0, w, h);
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(QColor(157, 116, 86, 255));

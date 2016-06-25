@@ -7,6 +7,7 @@
 #include "TextBox.h"
 #include "Board.h"
 #include "GameInfo.h"
+#include "Timer.h"
 #include <QGraphicsTextItem>
 #include <QPixmap>
 #include <QFontDatabase>
@@ -124,6 +125,7 @@ void Game::displayPlayerSelect() {
     for(int p = 1; p <= maxPlayers; p++) {
         QString playNum = QString::number(p);
         Button * pButton = new Button(playNum + " players", 400, 100);
+        pButton->setPen(Qt::NoPen);
 
 // Array storing the x, y position of the buttons
         int bPos[maxPlayers][2] {
@@ -170,9 +172,7 @@ void Game::displayMatchConfig(int players) {
 
         info->textBoxMap.insert(i, &selContainer->textBox->playerText);
         info->piecesMap.insert(i, &selContainer->piece);
-        qDebug() << info->piecesMap[i];
         Piece ** testtt = game->info->piecesMap[i];
-        qDebug() << (*testtt)->getSpriteNum();
     }
 
 
@@ -250,6 +250,9 @@ void Game::drawGUI() {
     drawBoard(30, 30);
     drawDice(); // 1300, 725, 100, 100
 
+    timer = new Timer();
+    scene->addItem(timer);
+
     QGraphicsRectItem * playerListBox = new QGraphicsRectItem();
     playerListBox->setRect(0, 0, 480, 686);
     scene->addItem(playerListBox);
@@ -266,12 +269,13 @@ void Game::drawGUI() {
 
     playerListBox->setPos(1120, 70);
 
-    // Create the play button
+    // Create the back button
         Button * backButton = new Button("Back", 400, 100);
         int backxPos = 1200;
         int backyPos = 780;
         backButton->setPos(backxPos, backyPos);
         connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
+        connect(backButton, SIGNAL(clicked()), this, SLOT(timer->resetTime()));
         scene->addItem(backButton);
 }
 
