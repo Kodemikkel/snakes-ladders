@@ -9,14 +9,14 @@ extern Game * game;
 
 // Piece::Piece(int pieceX, int pieceY, int piecePosX, int piecePosY, QGraphicsItem *parent) {
 
-Piece::Piece(int piece, int piecePosX, int piecePosY, float pieceScaleX, float pieceScaleY, QGraphicsItem *parent): QGraphicsPixmapItem(parent) {
+Piece::Piece(int sprite, int piecePosX, int piecePosY, float pieceScaleX, float pieceScaleY, QGraphicsItem *parent): QGraphicsPixmapItem(parent) {
     this->owner = "None";
     this->pieceScaleX = pieceScaleX;
     this->pieceScaleY = pieceScaleY;
     this->piecePosX = piecePosX;
     this->piecePosY = piecePosY;
 
-    this->setSpriteNum(piece);
+    this->setSpriteNum(sprite);
 }
 
 int Piece::getPos() {

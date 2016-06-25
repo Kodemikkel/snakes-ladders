@@ -7,7 +7,8 @@
 #include <QDebug>
 extern Game * game;
 
-Arrow::Arrow(int arrowPosX, int arrowPosY, int direction, QGraphicsItem * parent): QGraphicsPixmapItem(parent) {
+Arrow::Arrow(int arrowPosX, int arrowPosY, int direction, bool clickable, QGraphicsItem * parent): QGraphicsPixmapItem(parent) {
+
     int arrowX;
 
     // Draw the piece
@@ -27,21 +28,36 @@ Arrow::Arrow(int arrowPosX, int arrowPosY, int direction, QGraphicsItem * parent
 
 // Allow responding to hovering events
     setAcceptHoverEvents(true);
+
+// Set the clickable member to whatever is passed to the constructor (true/false)
+// This will enable or disable the click events
+    setClickable(clickable);
+}
+
+void Arrow::setClickable(bool clickSensitive) {
+// TODO: Create a cleaner way to toggle whether or not the button should be clickable
+    clickable = clickSensitive;
 }
 
 void Arrow::mousePressEvent(QGraphicsSceneMouseEvent * event) {
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
-    emit arrowClick();
+    if(clickable) {
+        QApplication::setOverrideCursor(Qt::ArrowCursor);
+        emit arrowClick();
+    }
 }
 
 void Arrow::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
-    setOffset(offset().x() , offset().y() + 4);
-    QApplication::setOverrideCursor(Qt::PointingHandCursor);
+    if(clickable) {
+        setOffset(offset().x() , offset().y() + 4);
+        QApplication::setOverrideCursor(Qt::PointingHandCursor);
+    }
 
 }
 
 void Arrow::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
-    setOffset(offset().x() , offset().y() - 4);
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
+    if(clickable) {
+        setOffset(offset().x() , offset().y() - 4);
+        QApplication::setOverrideCursor(Qt::ArrowCursor);
+    }
 
 }

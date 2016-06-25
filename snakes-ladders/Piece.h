@@ -9,7 +9,7 @@ class Piece: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
 // Constructors
-    Piece(int piece, int piecePosX, int piecePosY, float pieceScaleX, float pieceScaleY, QGraphicsItem * parent = NULL);
+    Piece(int sprite, int piecePosX, int piecePosY, float pieceScaleX, float pieceScaleY, QGraphicsItem * parent = NULL);
 
 
 // Getters

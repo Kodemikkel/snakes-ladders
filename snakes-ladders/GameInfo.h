@@ -27,7 +27,7 @@ public:
     QMap<int, QGraphicsTextItem**> textBoxMap;
     QMap<int, Piece**> piecesMap;
 
-    int pieces[6] {0, 1, 2, 3, 4, 5};
+    bool locked[6] {false, false, false, false, false, false};
 };
 
 #endif // GAMEINFO_H

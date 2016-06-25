@@ -8,8 +8,7 @@ TextBox::TextBox(QString text, bool editable, QGraphicsItem * parent): QGraphics
     setRect(0, 0, 352, 64);
     if(!editable) {
         this->setPen(Qt::NoPen); // Removes border
-    }
-    else if(editable) {
+    } else if(editable) {
         QBrush brush;
         brush.setStyle(Qt::SolidPattern);
         brush.setColor(QColor(255, 255, 255, 255));
@@ -36,10 +35,16 @@ void TextBox::mousePressEvent(QGraphicsSceneMouseEvent * event) {
 }
 
 bool TextBox::getEditable() {
-
+    return editable;
 }
 
-void TextBox::setEditable() {
-
+void TextBox::setEditable(bool edit) {
+    if(edit) {
+        playerText->setTextInteractionFlags(Qt::TextEditorInteraction);
+        this->editable = true;
+    } else {
+        playerText->setTextInteractionFlags(Qt::NoTextInteraction);
+        this->editable = false;
+    }
 }
 

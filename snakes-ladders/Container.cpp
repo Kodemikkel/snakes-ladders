@@ -30,14 +30,14 @@ void Container::Selection(int nPlayers, int sPieceNo, QGraphicsItem *parent) {
     QSignalMapper * addPiece = new QSignalMapper(this);
     QSignalMapper * lock = new QSignalMapper(this);
 
-    arrowL = new Arrow(0, posY - 32, 0, this);
+    arrowL = new Arrow(0, posY - 32, 0, true, this);
     connect(arrowL, SIGNAL(arrowClick()), subPiece, SLOT(map()));
     subPiece->setMapping(arrowL, nPlayers);
     connect(subPiece, SIGNAL(mapped(int)), this, SLOT(changePieceL(int)));
 
     piece = new Piece(sPieceNo, 96, posY - 32, 1, 1, this);
 
-    arrowR = new Arrow(192, posY - 32, 1, this);
+    arrowR = new Arrow(192, posY - 32, 1, true, this);
     connect(arrowR, SIGNAL(arrowClick()), addPiece, SLOT(map()));
     addPiece->setMapping(arrowR, nPlayers);
     connect(addPiece, SIGNAL(mapped(int)), this, SLOT(changePieceR(int)));
@@ -53,7 +53,7 @@ void Container::Selection(int nPlayers, int sPieceNo, QGraphicsItem *parent) {
 
 }
 
-void Container::Overview(int ovPlayers, int ovPieceNo, QGraphicsItem * parent) {
+void Container::Overview(int ovPlayers, int ovPieceNo) {
 
     QString ovNumName = QString::number(ovPlayers);
 
@@ -68,47 +68,75 @@ void Container::Overview(int ovPlayers, int ovPieceNo, QGraphicsItem * parent) {
     ovTextBox->setPos(128, ovPosY - 32);
 }
 
+bool Container::compareSprites(int sprite1, int sprite2) {
+    if(sprite1 == sprite2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void Container::lock(int nPlayer) {
-    if(locked[nPlayer - 1] == false) {
+    // TODO: Make back button less dirty
+    if(game->info->locked[nPlayer - 1] == false) {
+        qDebug() << "Locked";
         this->lockBtn->text->setPlainText("Unlock");
-        locked[nPlayer - 1] = true;
+        game->info->locked[nPlayer - 1] = true;
 
         QGraphicsTextItem ** value = game->info->textBoxMap.value(nPlayer, nullptr);
         game->info->names[nPlayer - 1] =(*value)->toPlainText();
 
-        this->textBox->editable = false;
-        this->textBox->playerText->setTextInteractionFlags(Qt::NoTextInteraction);
-    }
-    else {
+        this->textBox->setEditable(false);
+        this->arrowL->setClickable(false);
+        this->arrowR->setClickable(false);
+    } else {
+        qDebug() << "Unlocked";
         this->lockBtn->text->setPlainText("Lock");
-        locked[nPlayer - 1] = false;
+        game->info->locked[nPlayer - 1] = false;
 
-        this->textBox->editable = true;
-        this->textBox->playerText->setTextInteractionFlags(Qt::TextEditorInteraction);
+        this->textBox->setEditable(true);
+        this->arrowL->setClickable(true);
+        this->arrowR->setClickable(true);
     }
-    qDebug() << game->info->textBoxMap[nPlayer];
-    qDebug() << game->info->names[nPlayer - 1];
 }
 
 void Container::changePieceL(int nPlayer) {
-    qDebug() << game->info->pieces[nPlayer - 1];
+pieceCheckerL:
     Piece ** piece = game->info->piecesMap[nPlayer];
-    (*piece)->setSpriteNum((*piece)->getSpriteNum() - 1);
-    game->info->pieces[nPlayer - 1] = game->info->pieces[nPlayer - 1] - 1;
-    if(game->info->pieces[nPlayer - 1] < 0) {
-        game->info->pieces[nPlayer - 1] = 21;
+    int spriteNum = (*piece)->getSpriteNum() - 1;
+
+    (*piece)->setSpriteNum(spriteNum);
+    if(spriteNum < 0) {
+        spriteNum = 21;
     }
-    qDebug() << game->info->pieces[nPlayer - 1];
+
+    for(int i = 1; i <= game->info->players; i++) {
+        Piece ** comparePiece = game->info->piecesMap[i];
+        int compareSpriteNum = (*comparePiece)->getSpriteNum();
+
+        if(spriteNum == compareSpriteNum && i != nPlayer) {
+            goto pieceCheckerL;
+        }
+    }
 }
 
 void Container::changePieceR(int nPlayer) {
-    qDebug() << game->info->pieces[nPlayer - 1];
+pieceCheckerR:
     Piece ** piece = game->info->piecesMap[nPlayer];
-    (*piece)->setSpriteNum((*piece)->getSpriteNum() + 1);
-    game->info->pieces[nPlayer - 1] = game->info->pieces[nPlayer - 1] + 1;
-    if(game->info->pieces[nPlayer - 1] > 21) {
-        game->info->pieces[nPlayer - 1] = 0;
+    int spriteNum = (*piece)->getSpriteNum() + 1;
+
+    (*piece)->setSpriteNum(spriteNum);
+    if(spriteNum > 21) {
+        spriteNum = 0;
     }
-    qDebug() << game->info->pieces[nPlayer - 1];
-    qDebug() << sender();
+
+    for(int i = 1; i <= game->info->players; i++) {
+        Piece ** comparePiece = game->info->piecesMap[i];
+        int compareSpriteNum = (*comparePiece)->getSpriteNum();
+        qDebug() << compareSpriteNum;
+
+        if(spriteNum == compareSpriteNum && i != nPlayer) {
+            goto pieceCheckerR;
+        }
+    }
 }

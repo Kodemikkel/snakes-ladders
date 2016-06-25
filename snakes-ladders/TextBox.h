@@ -10,19 +10,25 @@
 class TextBox: public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
+// Constructors
     TextBox(QString text, bool editable, QGraphicsItem* parent=NULL);
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
+// Getters
     QString getText();
-
     bool getEditable();
 
-    void setEditable();
+// Setters
+    void setEditable(bool edit);
 
-    bool editable;
+// Public methods
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
+// Public members
     QGraphicsTextItem * playerText;
+
+private:
+// Private members
+    bool editable;
 };
 
 #endif // TEXTBOX_H

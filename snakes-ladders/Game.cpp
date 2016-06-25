@@ -45,8 +45,16 @@ Game::Game(QWidget * parent) {
 }
 
 void Game::start() {
-    scene->clear();
-    drawGUI();
+    bool locked = true;
+    for(int i = 1; i < info->players; i++) {
+        if(!info->locked[i]) {
+            locked = false;
+        }
+    }
+    if(locked) {
+        scene->clear();
+        drawGUI();
+    }
 }
 
 void Game::displayMainMenu() {
@@ -164,15 +172,12 @@ void Game::displayMatchConfig(int players) {
 // Create the player selection section
     for(int i = 1; i <= players; i++) {
         selContainer = new Container();
-        selContainer->Selection(i, info->pieces[i - 1]);
+        selContainer->Selection(i, i - 1);
         selContainer->setPos(50, 70 + 110 * (i - 1));
         scene->addItem(selContainer);
 
         info->textBoxMap.insert(i, &selContainer->textBox->playerText);
         info->piecesMap.insert(i, &selContainer->piece);
-        qDebug() << info->piecesMap[i];
-        Piece ** testtt = game->info->piecesMap[i];
-        qDebug() << (*testtt)->getSpriteNum();
     }
 
 
@@ -260,7 +265,7 @@ void Game::drawGUI() {
 
     for(int i = 1; i <= game->info->players; i++) {
         Container * playerList = new Container(playerListBox);
-        playerList->Overview(i, info->pieces[i - 1]);
+        playerList->Overview(i, i - 1);
         playerList->setPos(0, 0 + 110 * (i - 1));
     }
 

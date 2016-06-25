@@ -1,5 +1,5 @@
-#ifndef SELECTION_H
-#define SELECTION_H
+#ifndef CONTAINER_H
+#define CONTAINER_H
 
 #include "Arrow.h"
 #include "Button.h"
@@ -22,12 +22,12 @@ public:
     TextBox * textBox;
     Button * lockBtn;
 
-    void Overview(int ovPlayers, int ovPieceNo, QGraphicsItem * parent = NULL);
+    void Overview(int ovPlayers, int ovPieceNo);
 
     Piece * ovPiece;
     TextBox * ovTextBox;
 
-    bool locked[6] {false, false, false, false, false, false};
+    bool compareSprites(int sprite1, int sprite2);
 
 
 public slots:
@@ -36,4 +36,4 @@ public slots:
     void changePieceR(int nPlayer);
 };
 
-#endif // SELECTION_H
+#endif // CONTAINER_H
