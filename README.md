@@ -3,7 +3,6 @@ Rep for snakes &amp; ladders game
 
 ### Todo list
 
-- [ ] Lock / unlock
 - [ ] Timer w/ pause
 - [ ] Match layout
 - [ ] Spawn pieces
@@ -20,3 +19,4 @@ Rep for snakes &amp; ladders game
 - [x] Piece selection
 - [x] Selection and overview sync
 - [x] Start button
+- [x] Lock / unlock
