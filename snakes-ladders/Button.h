@@ -3,12 +3,13 @@
 
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QObject>
 
 class Button: public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
 // Constructors
-    Button(QString name, int w, int h, QGraphicsItem * parent=NULL);
+    Button(QString name, int w, int h, QGraphicsItem * parent = NULL);
 
 // Public methods
     void mousePressEvent(QGraphicsSceneMouseEvent * event);

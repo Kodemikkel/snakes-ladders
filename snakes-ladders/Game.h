@@ -1,11 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <QGraphicsView>
-#include <QGraphicsScene>
 #include "Tile.h"
 #include "GameInfo.h"
 #include "Container.h"
+#include "Timer.h"
+#include <QGraphicsView>
+#include <QGraphicsScene>
 
 class Game: public QGraphicsView {
     Q_OBJECT
@@ -22,6 +23,8 @@ public:
     Piece * piece;
     GameInfo * info;
     Container * selContainer;
+    Timer * timer;
+
 
 public slots:
     void start();

@@ -17,8 +17,6 @@ Container::Container(QGraphicsItem * parent): QGraphicsRectItem(parent) {
 
 void Container::Selection(int nPlayers, int sPieceNo, QGraphicsItem *parent) {
 
-    //qDebug() << game->info->names[1];
-
     QString numName = QString::number(nPlayers);
 
     setRect(0, 0, 672, 110);
