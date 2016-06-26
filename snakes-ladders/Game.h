@@ -24,6 +24,7 @@ public:
     GameInfo * info;
     Container * selContainer;
     Timer * timer;
+    Button * pauseButton;
 
 
 public slots:

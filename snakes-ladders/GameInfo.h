@@ -26,6 +26,7 @@ public:
 
     QMap<int, QGraphicsTextItem**> textBoxMap;
     QMap<int, Piece**> piecesMap;
+    QMap<int, QGraphicsPixmapItem*> checkmarkMap;
 
     bool locked[6] {false, false, false, false, false, false};
 };

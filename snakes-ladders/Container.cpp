@@ -87,6 +87,9 @@ void Container::lock(int nPlayer) {
         this->textBox->setEditable(false);
         this->arrowL->setClickable(false);
         this->arrowR->setClickable(false);
+
+        checkmark(nPlayer);
+        game->info->checkmarkMap.insert(nPlayer, checkmarkRect);
     } else {
         qDebug() << "Unlocked";
         this->lockBtn->text->setPlainText("Lock");
@@ -95,6 +98,8 @@ void Container::lock(int nPlayer) {
         this->textBox->setEditable(true);
         this->arrowL->setClickable(true);
         this->arrowR->setClickable(true);
+        QGraphicsPixmapItem * rect = game->info->checkmarkMap[nPlayer];
+        delete rect;
     }
 }
 
@@ -137,4 +142,17 @@ pieceCheckerR:
             goto pieceCheckerR;
         }
     }
+}
+
+void Container::checkmark(int nPlayer) {
+    int posX = 800;
+    int posY = 23;
+    checkmarkRect = new QGraphicsPixmapItem();
+    checkmarkRect->setParentItem(this);
+    QRect rect(576, 0, 64, 64);
+    QPixmap original(":/imgs/Spritesheet.png");
+    QPixmap cropped = original.copy(rect);
+    checkmarkRect->setOffset(posX, posY);
+    checkmarkRect->setPixmap(cropped);
+
 }

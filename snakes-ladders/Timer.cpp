@@ -6,6 +6,8 @@
 extern Game * game;
 
 Timer::Timer() {
+    pause = false;
+
 // Create the wrap around the timer
     setRect(0, 0, 192, 88);
     setPen(Qt::NoPen);
@@ -21,7 +23,7 @@ Timer::Timer() {
 // Create the timer
     tTimer = new QTimer(this);
     connect(tTimer, SIGNAL(timeout()), this, SLOT(showTime()));
-    tTimer->start(1000);
+    startTime();
     i = 0;
 
     QString tText = tTime->toString("hh:mm:ss");
@@ -40,7 +42,6 @@ Timer::Timer() {
 
     setPos(900, 70);
 }
-
 void Timer::showTime() {
     QTime tNewTime;
     i = i + 1000;
@@ -50,8 +51,19 @@ void Timer::showTime() {
     tTextItem->setPlainText(tText);
 }
 
-void Timer::resetTime() {
-    tTimer->stop();
-    tTime->restart();
-    i = 0;
+void Timer::pauseTime() {
+    if(pause) {
+        tTimer->start(1000);
+        pause = false;
+        game->pauseButton->text->setPlainText("||");
+    }
+    else {
+        tTimer->stop();
+        pause = true;
+        game->pauseButton->text->setPlainText("Start");
+    }
+}
+
+void Timer::startTime() {
+    tTimer->start(1000);
 }

@@ -3,7 +3,6 @@
 
 #include "TextBox.h"
 #include <QTimer>
-#include <QObject>
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
 #include <QTimer>
@@ -17,18 +16,18 @@ public:
     Timer();
 
 
-// Public members
-    //QGraphicsRectItem * tWrap;
+// Public members//QGraphicsRectItem * tWrap;
     QGraphicsTextItem * tTextItem;
     QTimer * tTimer;
     QTime * tTime;
 
     int i, tPosX, tPosY;
+    bool pause;
 
 public slots:
     void showTime();
-    void resetTime();
-
+    void pauseTime();
+    void startTime();
 };
 
 #endif // TIMER_H

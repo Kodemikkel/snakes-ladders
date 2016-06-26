@@ -47,7 +47,7 @@ Game::Game(QWidget * parent) {
 
 void Game::start() {
     bool locked = true;
-    for(int i = 1; i < info->players; i++) {
+    for(int i = 0; i < info->players; i++) {
         if(!info->locked[i]) {
             locked = false;
         }
@@ -169,8 +169,6 @@ void Game::displayMatchConfig(int players) {
 // Clear the screen
     scene->clear();
 
-    int faceNo = 6;
-
 // Create the player selection section
     for(int i = 1; i <= players; i++) {
         selContainer = new Container();
@@ -272,18 +270,29 @@ void Game::drawGUI() {
         Container * playerList = new Container(playerListBox);
         playerList->Overview(i, i - 1);
         playerList->setPos(0, 0 + 110 * (i - 1));
+
+        game->info->locked[i - 1] = false;
     }
 
     playerListBox->setPos(1120, 70);
 
-    // Create the back button
-        Button * backButton = new Button("Back", 400, 100);
-        int backxPos = 1200;
-        int backyPos = 780;
-        backButton->setPos(backxPos, backyPos);
-        connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-        connect(backButton, SIGNAL(clicked()), this, SLOT(timer->resetTime()));
-        scene->addItem(backButton);
+// Create the back button
+    Button * backButton = new Button("Back", 400, 100);
+    int backxPos = 1150;
+    int backyPos = 780;
+    backButton->setPos(backxPos, backyPos);
+    connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
+    scene->addItem(backButton);
+
+// Create the pause button
+    pauseButton = new Button("||", 192, 88);
+    int psxPos = 900;
+    int psyPos = 170;
+    pauseButton->setPos(psxPos, psyPos);
+    connect(pauseButton, SIGNAL(clicked()), timer, SLOT(pauseTime()));
+    scene->addItem(pauseButton);
+
+
 }
 
 void Game::drawDice() {
