@@ -29,7 +29,7 @@ private:
     int spriteNum;
 
 signals:
-    diceClicked();
+    void diceClicked();
 };
 
 #endif // DICE_H
