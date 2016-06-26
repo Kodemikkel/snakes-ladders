@@ -3,7 +3,6 @@
 
 #include "TextBox.h"
 #include <QTimer>
-#include <QObject>
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
 #include <QTimer>
@@ -35,12 +34,15 @@ public:
     QTime tNewTime;
 
     int time, tPosX, tPosY;
+    bool pause;
 
 public slots:
     void updateTimer();
     void updateDisplay();
     void resetTime();
     void startTimer(int interval);
+    void pauseTime();
+    void startTime();
 };
 
 #endif // TIMER_H

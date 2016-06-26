@@ -237,17 +237,27 @@ void Game::drawGUI() {
         int faceNum = pieceNo1->getSpriteNum();
         playerList->Overview(i, faceNum);
         playerList->setPos(0, 0 + 110 * (i - 1));
+
+        game->info->locked[i - 1] = false;
     }
 
     playerListBox->setPos(1120, 70);
 
 // Create the back button
     Button * backButton = new Button("Back", 400, 100);
-    int backxPos = 1200;
+    int backxPos = 1150;
     int backyPos = 780;
     backButton->setPos(backxPos, backyPos);
     connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
     scene->addItem(backButton);
+
+// Create the pause button
+    pauseButton = new Button("||", 192, 88);
+    int psxPos = 900;
+    int psyPos = 170;
+    pauseButton->setPos(psxPos, psyPos);
+    connect(pauseButton, SIGNAL(clicked()), timer, SLOT(pauseTime()));
+    scene->addItem(pauseButton);
 }
 
 void Game::drawDice() {

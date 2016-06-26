@@ -14,6 +14,7 @@ class GameInfo {
 public:
     GameInfo();
     int players;
+    int diceTime = 0;
 
     QStringList names = (QStringList()
         << "Player 1"
@@ -26,8 +27,7 @@ public:
 
     QMap<int, QGraphicsTextItem*> textBoxMap;
     QMap<int, Piece*> piecesMap;
-    QMap<int, QString> testMap;
-    int diceTime = 0;
+    QMap<int, QGraphicsPixmapItem*> checkmarkMap;
 
     bool locked[6] {false, false, false, false, false, false};
 };

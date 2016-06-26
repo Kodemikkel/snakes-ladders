@@ -14,6 +14,8 @@ Timer::Timer() {
     tTimer = new QTimer(this);
     connect(tTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
     this->time = 0;
+
+    pause = false;
 }
 
 Timer::Timer(int sizeX, int sizeY, int posX, int posY) {
@@ -71,4 +73,21 @@ void Timer::resetTime() {
     tTimer->stop();
     tTime->restart();
     this->time = 0;
+}
+
+void Timer::pauseTime() {
+    if(pause) {
+        tTimer->start(1000);
+        pause = false;
+        game->pauseButton->text->setPlainText("||");
+    }
+    else {
+        tTimer->stop();
+        pause = true;
+        game->pauseButton->text->setPlainText("Start");
+    }
+}
+
+void Timer::startTime() {
+    tTimer->start(1000);
 }

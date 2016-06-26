@@ -24,6 +24,7 @@ public:
     Timer * timer;
     Timer * diceTimer;
     Dice * dice;
+    Button * pauseButton;
 
 // Public methods
     void displayMainMenu();
