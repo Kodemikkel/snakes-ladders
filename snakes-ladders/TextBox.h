@@ -6,7 +6,7 @@
 #include <QTextCursor>
 #include <QObject>
 
-#include <qDebug>
+#include <QDebug>
 class TextBox: public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
