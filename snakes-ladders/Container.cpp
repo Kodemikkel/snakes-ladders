@@ -77,18 +77,16 @@ bool Container::compareSprites(int sprite1, int sprite2) {
 void Container::lock(int nPlayer) {
     // TODO: Make back button less dirty
     if(game->info->locked[nPlayer - 1] == false) {
-        qDebug() << "Locked";
         this->lockBtn->text->setPlainText("Unlock");
         game->info->locked[nPlayer - 1] = true;
 
-        QGraphicsTextItem ** value = game->info->textBoxMap.value(nPlayer, nullptr);
-        game->info->names[nPlayer - 1] =(*value)->toPlainText();
+        QGraphicsTextItem * value = game->info->textBoxMap.value(nPlayer, nullptr);
+        game->info->names[nPlayer - 1] = value->toPlainText();
 
         this->textBox->setEditable(false);
         this->arrowL->setClickable(false);
         this->arrowR->setClickable(false);
     } else {
-        qDebug() << "Unlocked";
         this->lockBtn->text->setPlainText("Lock");
         game->info->locked[nPlayer - 1] = false;
 
@@ -131,7 +129,6 @@ pieceCheckerR:
     for(int i = 1; i <= game->info->players; i++) {
         Piece * comparePiece = game->info->piecesMap[i];
         int compareSpriteNum = comparePiece->getSpriteNum();
-        qDebug() << compareSpriteNum;
 
         if(spriteNum == compareSpriteNum && i != nPlayer) {
             goto pieceCheckerR;

@@ -18,7 +18,6 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItem>
 #include <QThread>
-#include <QGraphicsTextItem>
 #include <QSignalMapper>
 #include <stdlib.h> // rand() -> really large int
 #include <string>
@@ -47,7 +46,6 @@ Game::Game(QWidget * parent) {
 void Game::start() {
     bool locked = true;
     for(int i = 0; i < info->players; i++) {
-        qDebug() << info->locked[i];
         if(!info->locked[i]) {
             locked = false;
         }
@@ -176,7 +174,7 @@ void Game::displayMatchConfig(int players) {
         selContainer->setPos(50, 70 + 110 * (i - 1));
         scene->addItem(selContainer);
 
-        info->textBoxMap.insert(i, &selContainer->textBox->playerText);
+        info->textBoxMap.insert(i, selContainer->textBox->playerText);
         info->piecesMap.insert(i, selContainer->piece);
     }
 
@@ -201,12 +199,10 @@ void Game::displayMatchConfig(int players) {
 void Game::rollDice() {
     game->info->diceTime = game->info->diceTime + 1;
     if(game->info->diceTime < 12) {
-        qDebug() << game->info->diceTime;
         int eyes;
 
         eyes = rand() % 6 + 1;
 
-        qDebug() << "Eyes" << eyes;
         dice->setSprite(eyes);
     } else {
         game->diceTimer->resetTime();
@@ -239,7 +235,6 @@ void Game::drawGUI() {
         Container * playerList = new Container(playerListBox);
         Piece * pieceNo1 = game->info->piecesMap[i];
         int faceNum = pieceNo1->getSpriteNum();
-//        qDebug() << faceNum;
         playerList->Overview(i, faceNum);
         playerList->setPos(0, 0 + 110 * (i - 1));
     }

@@ -103,10 +103,7 @@ void Board::drawBoard() {
 // Create the tile object with the specified properties, and add it to the scene
                 for(int k = 0; k < sizeof(spriteX)/sizeof(*spriteX); k++) {
                     if(this->spriteX[k] != NULL || k == 0) {
-                        Piece * testf = game->info->piecesMap[1];
-                        qDebug() << "Line 1" << testf->getSpriteNum();
                         Tile* tile = new Tile(this->scaleX * 64 * j + this->boardPosX, this->scaleY * 64 * i + this->boardPosY, this->spriteX[k], this->spriteY, this->scaleX, this->scaleY, this);
-                        qDebug() << "Line 2" << testf->getSpriteNum() << k;
                         if(j % 3 == 0 && spriteX[k] == 960) {
                             tile->drawTileNum(this->scaleX * 64 * j + this->boardPosX, this->scaleY * 64 * i + this->boardPosY, tileNumX, tileNumY, this->tileNumScaleX, this->tileNumScaleY);
                             tileNumX = tileNumX + 64;

@@ -24,7 +24,7 @@ public:
         << "Player 6"
         << "Player 7");
 
-    QMap<int, QGraphicsTextItem**> textBoxMap;
+    QMap<int, QGraphicsTextItem*> textBoxMap;
     QMap<int, Piece*> piecesMap;
     QMap<int, QString> testMap;
     int diceTime = 0;
