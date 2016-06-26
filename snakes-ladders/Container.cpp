@@ -100,17 +100,17 @@ void Container::lock(int nPlayer) {
 
 void Container::changePieceL(int nPlayer) {
 pieceCheckerL:
-    Piece ** piece = game->info->piecesMap[nPlayer];
-    int spriteNum = (*piece)->getSpriteNum() - 1;
+    Piece * piece = game->info->piecesMap[nPlayer];
+    int spriteNum = piece->getSpriteNum() - 1;
 
-    (*piece)->setSpriteNum(spriteNum);
+    piece->setSpriteNum(spriteNum);
     if(spriteNum < 0) {
         spriteNum = 21;
     }
 
     for(int i = 1; i <= game->info->players; i++) {
-        Piece ** comparePiece = game->info->piecesMap[i];
-        int compareSpriteNum = (*comparePiece)->getSpriteNum();
+        Piece * comparePiece = game->info->piecesMap[i];
+        int compareSpriteNum = comparePiece->getSpriteNum();
 
         if(spriteNum == compareSpriteNum && i != nPlayer) {
             goto pieceCheckerL;
@@ -120,17 +120,18 @@ pieceCheckerL:
 
 void Container::changePieceR(int nPlayer) {
 pieceCheckerR:
-    Piece ** piece = game->info->piecesMap[nPlayer];
-    int spriteNum = (*piece)->getSpriteNum() + 1;
+    Piece * piece = game->info->piecesMap[nPlayer];
+    int spriteNum = piece->getSpriteNum() + 1;
 
-    (*piece)->setSpriteNum(spriteNum);
+    piece->setSpriteNum(spriteNum);
     if(spriteNum > 21) {
         spriteNum = 0;
     }
 
     for(int i = 1; i <= game->info->players; i++) {
-        Piece ** comparePiece = game->info->piecesMap[i];
-        int compareSpriteNum = (*comparePiece)->getSpriteNum();
+        Piece * comparePiece = game->info->piecesMap[i];
+        int compareSpriteNum = comparePiece->getSpriteNum();
+        qDebug() << compareSpriteNum;
 
         if(spriteNum == compareSpriteNum && i != nPlayer) {
             goto pieceCheckerR;

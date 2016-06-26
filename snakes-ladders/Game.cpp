@@ -177,7 +177,7 @@ void Game::displayMatchConfig(int players) {
         scene->addItem(selContainer);
 
         info->textBoxMap.insert(i, &selContainer->textBox->playerText);
-        info->piecesMap.insert(i, &selContainer->piece);
+        info->piecesMap.insert(i, selContainer->piece);
     }
 
 
@@ -237,8 +237,8 @@ void Game::drawGUI() {
 
     for(int i = 1; i <= game->info->players; i++) {
         Container * playerList = new Container(playerListBox);
-        Piece ** pieceNo1 = game->info->piecesMap[i];
-        int faceNum = (*pieceNo1)->getSpriteNum();
+        Piece * pieceNo1 = game->info->piecesMap[i];
+        int faceNum = pieceNo1->getSpriteNum();
 //        qDebug() << faceNum;
         playerList->Overview(i, faceNum);
         playerList->setPos(0, 0 + 110 * (i - 1));
