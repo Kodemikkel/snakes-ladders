@@ -28,7 +28,7 @@ QString Piece::getOwner() {
 }
 
 int Piece::getSpriteNum() {
-    return spriteNum;
+    return this->spriteNum;
 }
 
 void Piece::setOwner(QString player) {
@@ -42,7 +42,7 @@ void Piece::setSpriteNum(int num) {
     } else if(num < 0) {
         num = 21;
     }
-    spriteNum = num;
+    this->spriteNum = num;
 
     int pieceX, pieceY;
 

@@ -9,9 +9,24 @@
 class Dice: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
+// Constructors
     Dice(int diceX, QGraphicsItem * parent = NULL);
 
+// Getters
+    int getSprite();
+
+// Setters
+    void setSprite(int spriteNum);
+
+// Public methods
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+// Public members
+
+
+private:
+// Private members
+    int spriteNum;
 
 signals:
     diceClicked();

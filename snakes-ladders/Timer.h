@@ -9,26 +9,38 @@
 #include <QTimer>
 #include <QTime>
 #include <QWidget>
+#include <QThread>
 
 
-class Timer: public QWidget, public QGraphicsRectItem {
+class Timer: public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
+// Constructors
     Timer();
+    Timer(int sizeX, int sizeY, int posX, int posY);
 
+// Getters
+
+
+// Setters
+
+
+// Public methods
+    void showDisplay(int sizeX, int sizeY, int posX, int posY);
 
 // Public members
-    //QGraphicsRectItem * tWrap;
     QGraphicsTextItem * tTextItem;
     QTimer * tTimer;
     QTime * tTime;
+    QTime tNewTime;
 
-    int i, tPosX, tPosY;
+    int time, tPosX, tPosY;
 
 public slots:
-    void showTime();
+    void updateTimer();
+    void updateDisplay();
     void resetTime();
-
+    void startTimer(int interval);
 };
 
 #endif // TIMER_H

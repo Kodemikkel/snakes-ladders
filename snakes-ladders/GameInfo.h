@@ -26,6 +26,8 @@ public:
 
     QMap<int, QGraphicsTextItem**> textBoxMap;
     QMap<int, Piece**> piecesMap;
+    QMap<int, QString> testMap;
+    int diceTime = 0;
 
     bool locked[6] {false, false, false, false, false, false};
 };

@@ -7,9 +7,21 @@
 #include <QDebug>
 
 extern Game * game;
-Dice::Dice(int diceX, QGraphicsItem * parent): QGraphicsPixmapItem(parent) {
+Dice::Dice(int spriteNum, QGraphicsItem * parent): QGraphicsPixmapItem(parent) {
+    this->setSprite(spriteNum);
+}
 
-    // Draw the dice
+void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    game->diceTimer->startTimer(100);
+    emit diceClicked();
+}
+
+void Dice::setSprite(int spriteNum) {
+
+    int diceX;
+    diceX = (spriteNum - 1) * 128;
+
+// Draw the dice
     QRect diceRect(diceX, 896, 128, 128);
     QPixmap original(":/imgs/Spritesheet.png");
     QPixmap cropped = original.copy(diceRect);
@@ -17,8 +29,5 @@ Dice::Dice(int diceX, QGraphicsItem * parent): QGraphicsPixmapItem(parent) {
     setOffset(900, 742);
     setPixmap(scaled);
 
-}
-
-void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    emit diceClicked();
+    this->spriteNum = spriteNum;
 }

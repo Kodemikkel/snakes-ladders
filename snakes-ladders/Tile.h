@@ -16,18 +16,21 @@ public:
 // Constructors
     Tile(int posX = 0, int posY = 0, int spriteX = 0, int spriteY = 0, float scaleX = 1, float scaleY = 1, QGraphicsItem * parent = NULL);
 
-// Getters/Setters
-    QList<Piece*> getPieces();
+// Getters
+
+
+// Setters
+
 
 // Public methods
     void movePiece(int x, int y);
     void drawTileNum(int posX = 0, int posY = 0, int spriteX = 0, int spriteY = 0, float scaleX = 1, float scaleY = 1);
 
-// Public attributes
+// Public members
 
 
 private:
-// Private attributes
+// Private members
     QList<Piece*> pieces;
 };
 

@@ -26,7 +26,6 @@
 #include <QDebug>
 
 extern Game * game;
-extern Game * drawDice;
 
 Game::Game(QWidget * parent) {
 // Set up the screen
@@ -47,7 +46,8 @@ Game::Game(QWidget * parent) {
 
 void Game::start() {
     bool locked = true;
-    for(int i = 1; i < info->players; i++) {
+    for(int i = 0; i < info->players; i++) {
+        qDebug() << info->locked[i];
         if(!info->locked[i]) {
             locked = false;
         }
@@ -169,8 +169,6 @@ void Game::displayMatchConfig(int players) {
 // Clear the screen
     scene->clear();
 
-    int faceNo = 6;
-
 // Create the player selection section
     for(int i = 1; i <= players; i++) {
         selContainer = new Container();
@@ -201,46 +199,19 @@ void Game::displayMatchConfig(int players) {
 }
 
 void Game::rollDice() {
-    // scene->removeItem(Game->drawDice());
-    int diceX, eyes;
-
-    for(int i = 0; i <= 12; i++) {
+    game->info->diceTime = game->info->diceTime + 1;
+    if(game->info->diceTime < 12) {
+        qDebug() << game->info->diceTime;
+        int eyes;
 
         eyes = rand() % 6 + 1;
-        switch(eyes) {
-            case 1:
-                diceX = 0;
-                break;
-            case 2:
-                diceX = 128;
-                break;
-            case 3:
-                diceX = 256;
-                break;
-            case 4:
-                diceX = 384;
-                break;
-            case 5:
-                diceX = 512;
-                break;
-            case 6:
-                diceX = 640;
-                break;
 
-
-        }
-
-        Dice * dice = new Dice(diceX);
-        connect(dice, SIGNAL(diceClicked()), this, SLOT(rollDice()));
-
-        scene->addItem(dice);
-
-        unsigned long sleep = 50;
-        QThread::msleep(sleep);
+        qDebug() << "Eyes" << eyes;
+        dice->setSprite(eyes);
+    } else {
+        game->diceTimer->resetTime();
+        game->info->diceTime = 0;
     }
-}
-
-void Game::testSlot() {
 }
 
 void Game::back() {
@@ -256,9 +227,7 @@ void Game::drawBoard(int boardPosX, int boardPosY) {
 void Game::drawGUI() {
     drawBoard(30, 30);
     drawDice(); // 1300, 725, 100, 100
-
-    timer = new Timer();
-    scene->addItem(timer);
+    drawTimer();
 
     QGraphicsRectItem * playerListBox = new QGraphicsRectItem();
     playerListBox->setRect(0, 0, 480, 686);
@@ -266,35 +235,38 @@ void Game::drawGUI() {
 
     playerListBox->setPen(Qt::NoPen); // Removes border
 
-    int faceNo = 0;
-
     for(int i = 1; i <= game->info->players; i++) {
         Container * playerList = new Container(playerListBox);
-        playerList->Overview(i, i - 1);
+        Piece ** pieceNo1 = game->info->piecesMap[i];
+        int faceNum = (*pieceNo1)->getSpriteNum();
+//        qDebug() << faceNum;
+        playerList->Overview(i, faceNum);
         playerList->setPos(0, 0 + 110 * (i - 1));
     }
 
     playerListBox->setPos(1120, 70);
 
-    // Create the back button
-        Button * backButton = new Button("Back", 400, 100);
-        int backxPos = 1200;
-        int backyPos = 780;
-        backButton->setPos(backxPos, backyPos);
-        connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-        connect(backButton, SIGNAL(clicked()), this, SLOT(timer->resetTime()));
-        scene->addItem(backButton);
+// Create the back button
+    Button * backButton = new Button("Back", 400, 100);
+    int backxPos = 1200;
+    int backyPos = 780;
+    backButton->setPos(backxPos, backyPos);
+    connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
+    scene->addItem(backButton);
 }
 
 void Game::drawDice() {
-    int diceX = 0;
-    Dice * dice = new Dice(diceX);
+    int diceX = 1;
+    dice = new Dice(diceX);
+    diceTimer = new Timer();
+    connect(diceTimer->tTimer, SIGNAL(timeout()), this, SLOT(rollDice()));
     connect(dice, SIGNAL(diceClicked()), this, SLOT(rollDice()));
     scene->addItem(dice);
-
-
-
-
 }
 
-
+void Game::drawTimer() {
+    timer = new Timer(192, 88, 900, 70);
+    timer->startTimer(1000);
+    timer->updateDisplay();
+    scene->addItem(timer);
+}

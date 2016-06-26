@@ -4,8 +4,6 @@
 
 extern Game * game;
 
-
-
 GameInfo::GameInfo() {
-
+    testMap.insert(1, "String");
 }

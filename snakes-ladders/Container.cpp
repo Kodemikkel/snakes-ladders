@@ -131,7 +131,6 @@ pieceCheckerR:
     for(int i = 1; i <= game->info->players; i++) {
         Piece ** comparePiece = game->info->piecesMap[i];
         int compareSpriteNum = (*comparePiece)->getSpriteNum();
-        qDebug() << compareSpriteNum;
 
         if(spriteNum == compareSpriteNum && i != nPlayer) {
             goto pieceCheckerR;
