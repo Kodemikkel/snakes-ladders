@@ -2,13 +2,11 @@
 #define TIMER_H
 
 #include "TextBox.h"
-#include <QTimer>
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
-#include <QTimer>
+#include <QObject>
 #include <QTime>
-#include <QWidget>
-#include <QThread>
+#include <QTimer>
 
 
 class Timer: public QObject, public QGraphicsRectItem {
@@ -19,7 +17,7 @@ public:
     Timer(int sizeX, int sizeY, int posX, int posY);
 
 // Getters
-
+    int getTime();
 
 // Setters
 
@@ -28,21 +26,23 @@ public:
     void showDisplay(int sizeX, int sizeY, int posX, int posY);
 
 // Public members
-    QGraphicsTextItem * tTextItem;
     QTimer * tTimer;
-    QTime * tTime;
-    QTime tNewTime;
 
-    int time, tPosX, tPosY;
-    bool pause;
 
 public slots:
-    void updateTimer();
+    void updateTime();
     void updateDisplay();
     void resetTime();
-    void startTimer(int interval);
+    void startTimer(int interval = 1000);
     void pauseTime();
-    void startTime();
+
+private:
+    QGraphicsTextItem * tTextItem;
+    QTime * tTime;
+    QTime tNewTime;
+    QString tText;
+
+    int time, tPosX, tPosY;
 };
 
 #endif // TIMER_H

@@ -11,16 +11,28 @@ public:
 // Constructors
     Button(QString name, int w, int h, QGraphicsItem * parent = NULL);
 
+// Getters
+    QString getText();
+
+// Setters
+    void setText(QString text);
+
 // Public methods
+
+// Public members
+
+
+// Events
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
     void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
 
-    QGraphicsTextItem * text;
 signals:
     void clicked();
 
 private:
+// Private members
+    QGraphicsTextItem * text;
 };
 
 #endif // BUTTON_H

@@ -1,13 +1,5 @@
 #include "Container.h"
-#include "Arrow.h"
-#include "Button.h"
-#include "Piece.h"
-#include "TextBox.h"
 #include "Game.h"
-#include <QHBoxLayout>
-#include <QDebug>
-#include <QGraphicsRectItem>
-#include <QSignalMapper>
 
 extern Game * game;
 
@@ -15,58 +7,72 @@ Container::Container(QGraphicsItem * parent): QGraphicsRectItem(parent) {
 
 }
 
-void Container::Selection(int nPlayers, int sPieceNo, QGraphicsItem *parent) {
+void Container::Selection(int nPlayers, int sPieceNo, int w, int h, QGraphicsItem *parent) {
 
-    QString numName = QString::number(nPlayers);
+    this->setRect(0, 0, w, h);
+    this->setPen(Qt::NoPen);
 
-    setRect(0, 0, 672, 110);
-    this->setPen(Qt::NoPen); // Removes border
+    int contentPosY = this->rect().height() / 2;
 
-    int posY = this->rect().height() / 2;
+// Signalmappers for arrows and buttons
+    this->subPieceMapper = new QSignalMapper(this);
+    this->addPieceMapper = new QSignalMapper(this);
+    this->lockMapper = new QSignalMapper(this);
 
-    QSignalMapper * subPiece = new QSignalMapper(this);
-    QSignalMapper * addPiece = new QSignalMapper(this);
-    QSignalMapper * lock = new QSignalMapper(this);
+// Left arrow
+    arrowL = new Arrow(0, contentPosY - 32, 0, true, this);
+    connect(arrowL, SIGNAL(arrowClick()), subPieceMapper, SLOT(map()));
+    subPieceMapper->setMapping(arrowL, nPlayers);
+    connect(subPieceMapper, SIGNAL(mapped(int)), this, SLOT(changePieceL(int)));
 
-    arrowL = new Arrow(0, posY - 32, 0, true, this);
-    connect(arrowL, SIGNAL(arrowClick()), subPiece, SLOT(map()));
-    subPiece->setMapping(arrowL, nPlayers);
-    connect(subPiece, SIGNAL(mapped(int)), this, SLOT(changePieceL(int)));
+// Selected piece
+    piece = new Piece(sPieceNo, 96, contentPosY - 32, 1, 1, this);
 
-    piece = new Piece(sPieceNo, 96, posY - 32, 1, 1, this);
+// Right arrow
+    arrowR = new Arrow(192, contentPosY - 32, 1, true, this);
+    connect(arrowR, SIGNAL(arrowClick()), addPieceMapper, SLOT(map()));
+    addPieceMapper->setMapping(arrowR, nPlayers);
+    connect(addPieceMapper, SIGNAL(mapped(int)), this, SLOT(changePieceR(int)));
 
-    arrowR = new Arrow(192, posY - 32, 1, true, this);
-    connect(arrowR, SIGNAL(arrowClick()), addPiece, SLOT(map()));
-    addPiece->setMapping(arrowR, nPlayers);
-    connect(addPiece, SIGNAL(mapped(int)), this, SLOT(changePieceR(int)));
+// Textbox for player name
+    pNameTextBox = new TextBox(game->info->names[nPlayers - 1], true, this);
+    pNameTextBox->setPos(288, contentPosY - 32);
 
-    textBox = new TextBox(game->info->names[nPlayers - 1], true, this);
-    textBox->setPos(288, posY - 32);
-
+// Lock button
     lockBtn = new Button("Lock", 96, 32, this);
-    connect(lockBtn, SIGNAL(clicked()), lock, SLOT(map()));
-    lock->setMapping(lockBtn, nPlayers);
-    connect(lock, SIGNAL(mapped(int)), this, SLOT(lock(int)));
-    lockBtn->setPos(672, posY - 16);
-
+    connect(lockBtn, SIGNAL(clicked()), lockMapper, SLOT(map()));
+    lockMapper->setMapping(lockBtn, nPlayers);
+    connect(lockMapper, SIGNAL(mapped(int)), this, SLOT(lock(int)));
+    lockBtn->setPos(672, contentPosY - 16);
 }
 
-void Container::Overview(int ovPlayers, int ovPieceNo) {
+void Container::Overview(int ovPlayers, int ovPieceNo, int w, int h) {
 
-    QString ovNumName = QString::number(ovPlayers);
-
-    setRect(0, 0, 622, 110);
-    this->setPos(0, 0);
-    this->setPen(Qt::NoPen); // Removes border
+    this->setRect(0, 0, w, h);
+    this->setPen(Qt::NoPen);
 
     int ovPosY = this->rect().height() / 2;
 
+// Player piece
     ovPiece = new Piece(ovPieceNo, 32, ovPosY - 32, 1, 1, this);
+
+// Player name
     ovTextBox = new TextBox(game->info->names[ovPlayers - 1], false, this);
     ovTextBox->setPos(128, ovPosY - 32);
 }
 
+void Container::checkmark() {
+// TODO: Make positioning formula
+    int posX = 800;
+    int posY = 23;
+    checkmarkRect = new QGraphicsPixmapItem();
+    checkmarkRect->setParentItem(this);
+    checkmarkRect->setOffset(posX, posY);
+    checkmarkRect->setPixmap(game->info->setSprite(10));
+}
+
 bool Container::compareSprites(int sprite1, int sprite2) {
+// Method for comparing two sprites (true if equal)
     if(sprite1 == sprite2) {
         return true;
     } else {
@@ -75,43 +81,45 @@ bool Container::compareSprites(int sprite1, int sprite2) {
 }
 
 void Container::lock(int nPlayer) {
-    // TODO: Make back button less dirty
+// Lock selection
     if(game->info->locked[nPlayer - 1] == false) {
-        this->lockBtn->text->setPlainText("Unlock");
-        game->info->locked[nPlayer - 1] = true;
+        this->lockBtn->setText("Unlock");
 
-        QGraphicsTextItem * value = game->info->textBoxMap.value(nPlayer, nullptr);
-        game->info->names[nPlayer - 1] = value->toPlainText();
+        game->info->names[nPlayer - 1] = game->info->textBoxMap[nPlayer]->getText();
 
-        this->textBox->setEditable(false);
+        this->pNameTextBox->setEditable(false);
         this->arrowL->setClickable(false);
         this->arrowR->setClickable(false);
 
-        checkmark(nPlayer);
+        this->checkmark();
         game->info->checkmarkMap.insert(nPlayer, checkmarkRect);
-    } else {
-        this->lockBtn->text->setPlainText("Lock");
-        game->info->locked[nPlayer - 1] = false;
+        game->info->locked[nPlayer - 1] = true;
+    }
+// Unlock selection
+    else {
+        this->lockBtn->setText("Lock");
 
-        this->textBox->setEditable(true);
+        this->pNameTextBox->setEditable(true);
         this->arrowL->setClickable(true);
         this->arrowR->setClickable(true);
-        QGraphicsPixmapItem * rect = game->info->checkmarkMap[nPlayer];
-        delete rect;
+        checkMark = game->info->checkmarkMap[nPlayer];
+        delete checkMark;
+        game->info->locked[nPlayer - 1] = false;
     }
 }
 
 void Container::changePieceL(int nPlayer) {
+// Previous piece
 pieceCheckerL:
     Piece * piece = game->info->piecesMap[nPlayer];
     int spriteNum = piece->getSpriteNum() - 1;
 
-    piece->setSpriteNum(spriteNum);
-    if(spriteNum < 0) {
-        spriteNum = 21;
+    if(spriteNum < game->info->getPieceSpriteStart()) {
+        spriteNum = game->info->getPieceSpriteStart() + game->info->getPieceAmount() - 1;
     }
+    piece->setSpriteNum(spriteNum);
 
-    for(int i = 1; i <= game->info->players; i++) {
+    for(int i = 1; i <= game->info->getPlayers(); i++) {
         Piece * comparePiece = game->info->piecesMap[i];
         int compareSpriteNum = comparePiece->getSpriteNum();
 
@@ -122,16 +130,17 @@ pieceCheckerL:
 }
 
 void Container::changePieceR(int nPlayer) {
+// Next piece
 pieceCheckerR:
     Piece * piece = game->info->piecesMap[nPlayer];
     int spriteNum = piece->getSpriteNum() + 1;
 
-    piece->setSpriteNum(spriteNum);
-    if(spriteNum > 21) {
-        spriteNum = 0;
+    if(spriteNum > game->info->getPieceSpriteStart() + game->info->getPieceAmount() - 1) {
+        spriteNum = game->info->getPieceSpriteStart();
     }
+    piece->setSpriteNum(spriteNum);
 
-    for(int i = 1; i <= game->info->players; i++) {
+    for(int i = 1; i <= game->info->getPlayers(); i++) {
         Piece * comparePiece = game->info->piecesMap[i];
         int compareSpriteNum = comparePiece->getSpriteNum();
 
@@ -139,17 +148,4 @@ pieceCheckerR:
             goto pieceCheckerR;
         }
     }
-}
-
-void Container::checkmark(int nPlayer) {
-    int posX = 800;
-    int posY = 23;
-    checkmarkRect = new QGraphicsPixmapItem();
-    checkmarkRect->setParentItem(this);
-    QRect rect(576, 0, 64, 64);
-    QPixmap original(":/imgs/Spritesheet.png");
-    QPixmap cropped = original.copy(rect);
-    checkmarkRect->setOffset(posX, posY);
-    checkmarkRect->setPixmap(cropped);
-
 }

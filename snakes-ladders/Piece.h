@@ -1,16 +1,14 @@
 #ifndef PIECE_H
 #define PIECE_H
 
-#include <QObject>
 #include <QGraphicsPixmapItem>
-#include <QGraphicsItem>
+#include <QObject>
 
 class Piece: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
 // Constructors
     Piece(int sprite, int piecePosX, int piecePosY, float pieceScaleX, float pieceScaleY, QGraphicsItem * parent = NULL);
-
 
 // Getters
     int getPos();
@@ -19,10 +17,14 @@ public:
 
 // Setters
     void setOwner(QString player);
-    void setPos(int x, int y);
     void setSpriteNum(int num);
 
+// Public methods
+
+// Public members
+
 private:
+// Private members
     QString owner;
     int spriteNum;
     float pieceScaleX;

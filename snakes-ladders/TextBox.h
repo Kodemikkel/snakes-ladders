@@ -3,32 +3,32 @@
 
 #include <QGraphicsTextItem>
 #include <QGraphicsRectItem>
-#include <QTextCursor>
 #include <QObject>
+#include <QTextCursor>
 
-#include <QDebug>
 class TextBox: public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
 // Constructors
-    TextBox(QString text, bool editable, QGraphicsItem* parent=NULL);
+    TextBox(QString textValue, bool editable, QGraphicsItem* parent=NULL);
 
 // Getters
     QString getText();
     bool getEditable();
 
 // Setters
+    void setText(QString text);
     void setEditable(bool edit);
 
 // Public methods
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 // Public members
-    QGraphicsTextItem * playerText;
 
 private:
 // Private members
     bool editable;
+    QGraphicsTextItem * text;
 };
 
 #endif // TEXTBOX_H

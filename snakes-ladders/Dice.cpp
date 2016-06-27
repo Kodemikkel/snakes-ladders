@@ -1,33 +1,46 @@
 #include "Dice.h"
-#include <stdlib.h> // rand() -> really large int
-#include <QGraphicsPixmapItem>
-#include <QGraphicsRectItem>
 #include "Game.h"
-#include <QGraphicsSceneMouseEvent>
-#include <QDebug>
+#include <QGraphicsRectItem>
 
 extern Game * game;
 Dice::Dice(int spriteNum, QGraphicsItem * parent): QGraphicsPixmapItem(parent) {
     this->setSprite(spriteNum);
+    diceTimer = new Timer();
+    connect(diceTimer->tTimer, SIGNAL(timeout()), this, SLOT(rollDice()));
 }
 
-void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    game->diceTimer->startTimer(100);
-    emit diceClicked();
+int Dice::getSprite() {
+    return this->spriteNum;
+}
+
+int Dice::getDiceSpriteCount() {
+    return this->diceSpriteCount;
 }
 
 void Dice::setSprite(int spriteNum) {
-
-    int diceX;
-    diceX = (spriteNum - 1) * 128;
-
-// Draw the dice
-    QRect diceRect(diceX, 896, 128, 128);
-    QPixmap original(":/imgs/Spritesheet.png");
-    QPixmap cropped = original.copy(diceRect);
-    QPixmap scaled = cropped.scaled(QSize(128 * 1, 128 * 1));
+    this->setPixmap(game->info->setSprite((spriteNum * 2 - 1) + 224, 1, 1, 128, 128));
     setOffset(900, 742);
-    setPixmap(scaled);
-
     this->spriteNum = spriteNum;
+}
+
+void Dice::setDiceSpriteCount(int spriteCount) {
+    this->diceSpriteCount = spriteCount;
+}
+
+void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    this->diceTimer->startTimer(85);
+    emit diceClicked();
+}
+
+void Dice::rollDice() {
+// Check how many times the dice changed sprite
+    if(this->getDiceSpriteCount() < 18) {
+        int eyes = rand() % 6 + 1;
+        this->setSprite(eyes);
+    } else {
+        this->diceTimer->resetTime();
+        this->setDiceSpriteCount(0);
+    }
+// Add one to the "changed sprite" member
+    this->setDiceSpriteCount(this->getDiceSpriteCount() + 1);
 }

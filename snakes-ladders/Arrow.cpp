@@ -1,30 +1,23 @@
 #include "Arrow.h"
 #include "Game.h"
-#include <QGraphicsPixmapItem>
-#include <QGraphicsRectItem>
 #include <QApplication>
+#include <QGraphicsRectItem>
 
-#include <QDebug>
 extern Game * game;
 
 Arrow::Arrow(int arrowPosX, int arrowPosY, int direction, bool clickable, QGraphicsItem * parent): QGraphicsPixmapItem(parent) {
 
-    int arrowX;
-
-    // Draw the piece
+// Choose sprite depending on orientation
     if(direction == 0) {
-        arrowX = 640;
+        this->spriteNum = 11;
     }
     else if (direction == 1) {
-        arrowX = 704;
+        this->spriteNum = 12;
     }
 
-    QRect arrowRect(arrowX, 0, 64, 64);
-    QPixmap original(":/imgs/Spritesheet.png");
-    QPixmap cropped = original.copy(arrowRect);
-    QPixmap scaled = cropped.scaled(QSize(64 * 1, 64 * 1));
-    setOffset(arrowPosX, arrowPosY);
-    setPixmap(scaled);
+// Set position and draw the piece
+    this->setPixmap(game->info->setSprite(this->spriteNum));
+    this->setOffset(arrowPosX, arrowPosY);
 
 // Allow responding to hovering events
     setAcceptHoverEvents(true);
@@ -34,29 +27,30 @@ Arrow::Arrow(int arrowPosX, int arrowPosY, int direction, bool clickable, QGraph
     setClickable(clickable);
 }
 
-void Arrow::setClickable(bool clickSensitive) {
-// TODO: Create a cleaner way to toggle whether or not the button should be clickable
-    clickable = clickSensitive;
+void Arrow::setClickable(bool clickable) {
+    this->clickable = clickable;
 }
 
 void Arrow::mousePressEvent(QGraphicsSceneMouseEvent * event) {
-    if(clickable) {
-        QApplication::setOverrideCursor(Qt::ArrowCursor);
+// Check if the object should be clickable or not
+    if(this->clickable) {
         emit arrowClick();
     }
 }
 
 void Arrow::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
-    if(clickable) {
-        setOffset(offset().x() , offset().y() + 4);
+// Check if the object should be clickable or not
+    if(this->clickable) {
+        this->setOffset(offset().x() , offset().y() + 4);
         QApplication::setOverrideCursor(Qt::PointingHandCursor);
     }
 
 }
 
 void Arrow::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
-    if(clickable) {
-        setOffset(offset().x() , offset().y() - 4);
+// Check if the object should be clickable or not
+    if(this->clickable) {
+        this->setOffset(offset().x() , offset().y() - 4);
         QApplication::setOverrideCursor(Qt::ArrowCursor);
     }
 

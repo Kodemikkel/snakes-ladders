@@ -1,7 +1,10 @@
 #include "TextBox.h"
+#include "Game.h"
 #include <QFontDatabase>
 
-TextBox::TextBox(QString text, bool editable, QGraphicsItem * parent): QGraphicsRectItem(parent) {
+extern Game * game;
+
+TextBox::TextBox(QString textValue, bool editable, QGraphicsItem * parent): QGraphicsRectItem(parent) {
     this->editable = editable;
 
 // Draw the textbox
@@ -9,42 +12,48 @@ TextBox::TextBox(QString text, bool editable, QGraphicsItem * parent): QGraphics
     if(!editable) {
         this->setPen(Qt::NoPen); // Removes border
     } else if(editable) {
+// TODO: Fix brush method in gameinfo
         QBrush brush;
         brush.setStyle(Qt::SolidPattern);
         brush.setColor(QColor(255, 255, 255, 255));
         setBrush(brush);
     }
 
-// Draw the text
-    playerText = new QGraphicsTextItem(text, this);
-    int fontId = QFontDatabase::addApplicationFont(":/fonts/built_titling_bd.ttf");
-
-    QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
-    QFont built(family, 25);
-    playerText->setFont(built);
+// Set font, position and draw text
+    text = new QGraphicsTextItem(textValue, this);
+    text->setFont(game->info->fontDb->font("Built Titling Rg", 0, 25));
     int xPos = 0;
-    int yPos = rect().height() / 2 - playerText->boundingRect().height() / 2;
-    playerText->setPos(xPos,yPos);
+    int yPos = rect().height() / 2 - text->boundingRect().height() / 2;
+    text->setPos(xPos,yPos);
 }
 
-void TextBox::mousePressEvent(QGraphicsSceneMouseEvent * event) {
-    if(this->editable) {
-        this->playerText->setTextInteractionFlags(Qt::TextEditorInteraction);
-        this->playerText->setFocus(Qt::MouseFocusReason);
-    }
+QString TextBox::getText() {
+    return this->text->toPlainText();
 }
 
 bool TextBox::getEditable() {
     return editable;
 }
 
+void TextBox::setText(QString text) {
+    this->text->setPlainText(text);
+}
+
 void TextBox::setEditable(bool edit) {
     if(edit) {
-        playerText->setTextInteractionFlags(Qt::TextEditorInteraction);
+        text->setTextInteractionFlags(Qt::TextEditorInteraction);
         this->editable = true;
     } else {
-        playerText->setTextInteractionFlags(Qt::NoTextInteraction);
+        text->setTextInteractionFlags(Qt::NoTextInteraction);
         this->editable = false;
+    }
+}
+
+
+void TextBox::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+    if(this->editable) {
+        this->text->setTextInteractionFlags(Qt::TextEditorInteraction);
+        this->text->setFocus(Qt::MouseFocusReason);
     }
 }
 

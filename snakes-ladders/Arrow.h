@@ -1,10 +1,9 @@
 #ifndef ARROW_H
 #define ARROW_H
 
-#include <QObject>
 #include <QGraphicsPixmapItem>
-#include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QObject>
 
 class Arrow: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
@@ -16,7 +15,13 @@ public:
     bool getClickable();
 
 // Setters
-    void setClickable(bool clickSensitive);
+    void setClickable(bool clickable);
+
+// Public methods
+
+
+// Public members
+    int spriteNum;
 
 // Events
     void mousePressEvent(QGraphicsSceneMouseEvent * event);

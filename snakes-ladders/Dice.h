@@ -1,10 +1,10 @@
 #ifndef DICE_H
 #define DICE_H
 
-#include <QObject>
+#include "Timer.h"
 #include <QGraphicsPixmapItem>
-#include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QObject>
 
 class Dice: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
@@ -14,22 +14,32 @@ public:
 
 // Getters
     int getSprite();
+    int getDiceSpriteCount();
 
 // Setters
     void setSprite(int spriteNum);
+    void setDiceSpriteCount(int spriteCount);
 
 // Public methods
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 
 // Public members
 
 
-private:
-// Private members
-    int spriteNum;
+// Events
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 signals:
     void diceClicked();
+
+public slots:
+    void rollDice();
+
+private:
+// Private members
+    int spriteNum;
+    int diceSpriteCount = 0;
+    Timer * diceTimer;
 };
 
 #endif // DICE_H

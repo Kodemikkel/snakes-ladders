@@ -6,19 +6,19 @@
 extern Game * game;
 
 Timer::Timer() {
+
 // Sets time to 0
     tTime = new QTime();
     tTime->setHMS(0, 0, 0, 0);
 
 // Create the timer
     tTimer = new QTimer(this);
-    connect(tTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
+    connect(tTimer, SIGNAL(timeout()), this, SLOT(updateTime()));
     this->time = 0;
-
-    pause = false;
 }
 
 Timer::Timer(int sizeX, int sizeY, int posX, int posY) {
+
 // Sets time to 0
     tTime = new QTime();
     tTime->setHMS(0, 0, 0, 0);
@@ -30,42 +30,35 @@ Timer::Timer(int sizeX, int sizeY, int posX, int posY) {
     showDisplay(sizeX, sizeY, posX, posY);
 }
 
+int Timer::getTime() {
+    return this->time;
+}
+
 void Timer::showDisplay(int sizeX, int sizeY, int posX, int posY) {
-// Create the wrap around the timer
-    setRect(0, 0, sizeX, sizeY);
-    setPen(Qt::NoPen);
-    QBrush brush;
-    brush.setStyle(Qt::SolidPattern);
-    brush.setColor(QColor(157, 116, 86, 255));
-    setBrush(brush);
 
-// Make a font for the time
-    QFont font;
-    font.setPixelSize(32);
-    font.setBold(true);
+// Draw the display
+    this->setRect(0, 0, sizeX, sizeY);
+    this->setPen(Qt::NoPen);
+    this->setBrush(game->info->getBrush());
 
-// Draw the time text
+// Draw the timer text
     tTextItem = new QGraphicsTextItem("00:00:00", this);
-    tTextItem->setFont(font);
-    tPosX = sizeX / 2 - tTextItem->boundingRect().width() / 2;
-    tPosY = sizeY / 2 - tTextItem->boundingRect().height() / 2;
-    tTextItem->setPos(tPosX, tPosY);
+    tTextItem->setFont(game->info->fontDb->font("Built Titling Rg", 0, 32));
+    this->tPosX = sizeX / 2 - tTextItem->boundingRect().width() / 2;
+    this->tPosY = sizeY / 2 - tTextItem->boundingRect().height() / 2;
+    tTextItem->setPos(this->tPosX, this->tPosY);
 
-    setPos(posX, posY);
+    this->setPos(posX, posY);
 }
 
-void Timer::startTimer(int interval) {
-    tTimer->start(interval);
-}
-
-void Timer::updateTimer() {
+void Timer::updateTime() {
     this->time = this->time + 1000;
-    this->tNewTime = tTime->addMSecs(this->time);
+    this->tNewTime = this->tTime->addMSecs(this->time);
 }
 
 void Timer::updateDisplay() {
-    updateTimer();
-    QString tText = tNewTime.toString("hh:mm:ss");
+    updateTime();
+    tText = tNewTime.toString("hh:mm:ss");
     tTextItem->setPlainText(tText);
 }
 
@@ -75,19 +68,19 @@ void Timer::resetTime() {
     this->time = 0;
 }
 
+void Timer::startTimer(int interval) {
+    tTimer->start(interval);
+}
+
 void Timer::pauseTime() {
-    if(pause) {
+    if(game->info->getPause()) {
         tTimer->start(1000);
-        pause = false;
-        game->pauseButton->text->setPlainText("||");
+        game->info->setPause(false);
+        game->pauseButton->setText("||");
     }
     else {
         tTimer->stop();
-        pause = true;
-        game->pauseButton->text->setPlainText("Start");
+        game->info->setPause(true);
+        game->pauseButton->setText("Start");
     }
-}
-
-void Timer::startTime() {
-    tTimer->start(1000);
 }
