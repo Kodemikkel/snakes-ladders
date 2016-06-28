@@ -168,7 +168,7 @@ void Game::back() {
 
 void Game::drawBoard(int boardPosX, int boardPosY) {
     board = new Board();
-    board->drawBoard(1, boardPosX, boardPosY, .4375, .4375);
+    board->drawBoard(boardPosX, boardPosY, .4375);
     scene->addItem(board);
 }
 

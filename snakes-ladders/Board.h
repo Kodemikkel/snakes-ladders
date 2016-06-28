@@ -11,43 +11,37 @@ public:
     Board(QGraphicsItem * parent = NULL);
 
 // Getters
-    float getScaleX();
-    float getScaleY();
-    float getTileNumScaleX();
-    float getTileNumScaleY();
+    float getScale();
     int getBoardPosX();
     int getBoardPosY();
-    int getBoardType();
 
 // Setters
-    void setScaleX(float scaleX);
+    void setScale(float scale);
     void setScaleY(float scaleY);
-    void setTileNumScaleX(float tileNumScaleX);
-    void setTileNumScaleY(float tileNumScaleY);
-    void setBoardPosX(int boardPosX);
-    void setBoardPosY(int boardPosY);
-    void setBoardType(int boardType);
+    void setBoardPos(int boardPosX, int boardPosY);
 
 // Public methods
-    void drawBoard(int boardType = 1, int boardPosX = 0, int boardPosY = 0, float scaleX = 1, float scaleY = 1);
+    void drawBoard(int boardPosX = 0, int boardPosY = 0, float scale = 1);
 
 // Public members
     QMap<int, Tile*> tileRef;
 
 private:
+
+// Private methods
+    void drawBigTile(int posX, int posY, float scale = 1);
+    void drawTile(int spriteNum, int spriteX, int spriteY, float scale = 0.4375);
+
 // Private members
-    float scaleX;
-    float scaleY;
-    float tileNumScaleX;
-    float tileNumScaleY;
+    Tile * tile;
+    float scale;
     int boardPosX;
     int boardPosY;
-    int boardType;
+    int tileSpriteX;
+    int tileSpriteY;
     int tileNumType = 0;
-
-    int spriteX[3];
-    int spriteY = 0;
     int tileSpriteNum = 49;
+    int tileNumVal = 100;
 
 };
 
