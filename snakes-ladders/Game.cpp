@@ -2,6 +2,7 @@
 #include "Arrow.h"
 #include "Piece.h"
 #include "TextBox.h"
+#include <ctime>
 
 #include <QDebug>
 
@@ -187,6 +188,7 @@ void Game::drawBoard(int boardPosX, int boardPosY) {
 }
 
 void Game::drawGUI() {
+    srand(time(NULL));
     scene->clear();
     drawBoard(30, 30);
     drawDice();
