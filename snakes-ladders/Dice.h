@@ -31,6 +31,7 @@ public:
 
 signals:
     void diceClicked();
+    void diceRolled();
 
 public slots:
     void rollDice();

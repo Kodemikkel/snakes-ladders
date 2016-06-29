@@ -1,17 +1,20 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+#include "Timer.h"
 #include <QGraphicsPixmapItem>
 #include <QObject>
 
 class Piece: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
+
 // Constructors
-    Piece(int sprite, int piecePosX, int piecePosY, float pieceScaleX, float pieceScaleY, QGraphicsItem * parent = NULL);
+    Piece(int sprite, int posX, int posY, float scale, QGraphicsItem * parent = NULL);
 
 // Getters
-    int getPos();
+    int getPosX();
+    int getPosY();
     QString getOwner();
     int getSpriteNum();
 
@@ -20,17 +23,51 @@ public:
     void setSpriteNum(int num);
 
 // Public methods
+    void addPosX(int addX);
+    void addPosY(int addY);
 
 // Public members
+    bool forward;
+    int finalTileNum;
 
 private:
 // Private members
     QString owner;
     int spriteNum;
-    float pieceScaleX;
-    float pieceScaleY;
-    int piecePosX;
-    int piecePosY;
+    float scale;
+    int posX;
+    int posY;
+};
+
+class MoveablePiece: public Piece {
+    Q_OBJECT
+public:
+
+// Constructors
+    MoveablePiece(int sprite, int posX, int posY, float scale, QGraphicsItem *parent);
+
+// Getters
+    int getTileNum();
+    int getStepsLeft();
+    int getStepsToTake();
+
+// Setters
+    void setTileNum(int tileNum);
+    void setStepsLeft(int stepsLeft);
+    void setStepsToTake(int stepsToTake);
+
+
+public slots:
+    void move();
+    void initMove(int stepsLeft);
+
+private:
+
+// Private members
+    int tileNum;
+    int stepsLeft;
+    int stepsToTake;
+    Timer * moveTimer;
 };
 
 #endif // PIECE_H

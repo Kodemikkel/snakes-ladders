@@ -8,6 +8,7 @@
 extern Game * game;
 
 Game::Game() {
+
 // Set up the screen
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -65,6 +66,18 @@ void Game::displayMainMenu() {
     scene->addItem(quitButton);
 }
 
+void Game::spawnPiece() {
+    float scaleFactor = .7;
+    float pieceScale = board->getScale() / scaleFactor;
+    Tile * posTile = board->tileRef[1];
+    int piecePosX = posTile->getPosX();
+    int piecePosY = posTile->getPosY() + (64 * scaleFactor) - (64 * board->getScale());
+    for(int i = 1; i <= this->info->getPlayers(); i++) {
+        player = new MoveablePiece(this->info->getPiece(i), piecePosX + (i * 6), piecePosY, pieceScale, board);
+        this->board->players.insert(i, player);
+    }
+}
+
 void Game::start() {
     bool locked = true;
 
@@ -77,13 +90,14 @@ void Game::start() {
 
 // Start the game
     if(locked) {
-        scene->clear();
-        drawGUI();
+        this->drawGUI();
     }
 }
 
 void Game::displayPlayerSelect() {
     scene->clear();
+
+    this->info->playerTurn = 1;
 
 // Create the title text
     info->drawTitle();
@@ -131,7 +145,7 @@ void Game::displayPlayerSelect() {
 void Game::displayMatchConfig(int players) {
     scene->clear();
 
-    game->info->setPlayers(players);
+    this->info->setPlayers(players);
 
 // Create the player selection section
     for(int i = 1; i <= players; i++) {
@@ -140,10 +154,9 @@ void Game::displayMatchConfig(int players) {
         selectionMenu->setPos(50, 70 + 110 * (i - 1));
         scene->addItem(selectionMenu);
 
-        info->textBoxMap.insert(i, selectionMenu->pNameTextBox);
-        info->piecesMap.insert(i, selectionMenu->piece);
+        this->info->tempPlayerNames.insert(i, selectionMenu->pNameTextBox);
+        this->info->tempPlayerPieces.insert(i, selectionMenu->piece);
     }
-
 
 // Create the back button
     backButton = new Button("Back", 400, 100);
@@ -170,9 +183,11 @@ void Game::drawBoard(int boardPosX, int boardPosY) {
     board = new Board();
     board->drawBoard(boardPosX, boardPosY, .4375);
     scene->addItem(board);
+    this->spawnPiece();
 }
 
 void Game::drawGUI() {
+    scene->clear();
     drawBoard(30, 30);
     drawDice();
     drawTimer();
@@ -216,14 +231,14 @@ void Game::drawPlayerList() {
 
     playerListBox->setPen(Qt::NoPen); // Removes border
 
-    for(int i = 1; i <= game->info->getPlayers(); i++) {
+    for(int i = 1; i <= this->info->getPlayers(); i++) {
         Container * playerList = new Container(playerListBox);
-        Piece * pieceNo = game->info->piecesMap[i];
-        int faceNum = pieceNo->getSpriteNum();
+        int faceNum = this->info->getPiece(i);
+        qDebug() << "Fault is here" << faceNum;
         playerList->Overview(i, faceNum);
         playerList->setPos(0, 0 + 110 * (i - 1));
 
-        game->info->locked[i - 1] = false;
+        this->info->locked[i - 1] = false;
     }
 
     playerListBox->setPos(1120, 70);

@@ -1,6 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "Piece.h"
 #include "Tile.h"
 #include <QGraphicsRectItem>
 #include <QMap>
@@ -25,6 +26,7 @@ public:
 
 // Public members
     QMap<int, Tile*> tileRef;
+    QMap<int, MoveablePiece*> players;
 
 private:
 

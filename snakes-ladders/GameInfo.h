@@ -25,6 +25,7 @@ public:
     int getMaxPlayers();
     int getPieceSpriteStart();
     int getPieceAmount();
+    int getPiece(int num);
     bool getPause();
 
 // Setters
@@ -34,8 +35,9 @@ public:
     void setPieceSpriteStart(int pieceStart);
     void setPieceAmount(int pieceAmount);
     void setPause(bool pause);
+
     QPixmap setSprite(int spriteNum,
-                      float scaleX = 1, float scaleY = 1,
+                      float scale = 1,
                       int spriteW = 64, int spriteH = 64,
                       QString path = ":/imgs/Spritesheet.png");
 
@@ -45,11 +47,13 @@ public:
 
 // Public members
     QGraphicsTextItem * titleText;
-    QMap<int, TextBox*> textBoxMap;
-    QMap<int, Piece*> piecesMap;
+    QMap<int, TextBox*> tempPlayerNames;
+    QMap<int, Piece*> tempPlayerPieces;
     QMap<int, QGraphicsPixmapItem*> checkmarkMap;
     QFontDatabase * fontDb;
-    QStringList names = (QStringList()
+
+    QMap<int, int> playerPieces;
+    QStringList playerNames = (QStringList()
         << "Player 1"
         << "Player 2"
         << "Player 3"
@@ -59,6 +63,7 @@ public:
         << "Player 7");
 
     bool locked[6] {false, false, false, false, false, false};
+    int playerTurn = 1;
 
 private:
     QBrush brush;

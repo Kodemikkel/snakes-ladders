@@ -22,10 +22,14 @@ public:
     QGraphicsScene * scene;
     GameInfo * info;
     Button * pauseButton;
+    MoveablePiece * player;
+    Board * board;
+    Dice * dice;
     int yFactor = 0;
 
 // Public methods
     void displayMainMenu();
+    void spawnPiece();
 
 public slots:
     void start();
@@ -43,7 +47,6 @@ private:
     Piece * piece;
     Container * selectionMenu;
     Timer * timer;
-    Dice * dice;
     Button * playButton;
     Button * tutButton;
     Button * optionsButton;
@@ -52,7 +55,6 @@ private:
     Button * backButton;
     Button * startButton;
     QSignalMapper * signalMapper;
-    Board * board;
     QGraphicsRectItem * playerListBox;
 };
 

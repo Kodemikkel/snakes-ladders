@@ -29,6 +29,7 @@ private:
 // Private members
     bool editable;
     QGraphicsTextItem * text;
+    QString test = "Lol";
 };
 
 #endif // TEXTBOX_H

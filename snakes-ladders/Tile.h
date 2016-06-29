@@ -11,21 +11,18 @@ public:
     Tile(int spriteNum,
          int posX = 0,
          int posY = 0,
-         float scaleX = .4375,
-         float scaleY = .4375,
+         float scale = .4375,
          QGraphicsItem * parent = NULL);
 
 // Getters
     int getPosX();
     int getPosY();
-    float getScaleX();
-    float getScaleY();
+    float getScale();
 
 // Setters
     void setPosY(int value);
     void setPosX(int value);
-    void setScaleX(float value);
-    void setScaleY(float value);
+    void setScale(float value);
 
 // Public methods
     void addSprite(int tileNum);
@@ -36,8 +33,7 @@ private:
     // Private members
     int posX;
     int posY;
-    float scaleX;
-    float scaleY;
+    float scale;
 };
 
 #endif // TILE_H

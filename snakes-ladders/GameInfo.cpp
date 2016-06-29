@@ -1,5 +1,6 @@
 #include "GameInfo.h"
 #include "Game.h"
+#include "Piece.h"
 #include <QDebug>
 
 extern Game * game;
@@ -44,6 +45,10 @@ int GameInfo::getPieceAmount() {
     return this->pieceAmount;
 }
 
+int GameInfo::getPiece(int num) {
+    return this->playerPieces.value(num);
+}
+
 bool GameInfo::getPause() {
     return this->pause;
 }
@@ -73,7 +78,7 @@ void GameInfo::setPause(bool pause) {
     this->pause = pause;
 }
 
-QPixmap GameInfo::setSprite(int spriteNum, float scaleX, float scaleY, int spriteW, int spriteH, QString path) {
+QPixmap GameInfo::setSprite(int spriteNum, float scale, int spriteW, int spriteH, QString path) {
 
 // Algorithm for getting sprite coordinates from spriteNum
     int spriteX = ((spriteNum - 1) % 16) * 64;
@@ -82,16 +87,18 @@ QPixmap GameInfo::setSprite(int spriteNum, float scaleX, float scaleY, int sprit
     QRect rect(spriteX, spriteY, spriteW, spriteH);
     QPixmap original(path);
     QPixmap cropped = original.copy(rect);
-    QPixmap scaled = cropped.scaled(QSize(spriteW * scaleX, spriteH * scaleY));
+    QPixmap scaled = cropped.scaled(QSize(spriteW * scale, spriteH * scale));
     return scaled;
 }
 
 void GameInfo::addFont(QString path) {
+
 // Add the font to the database - allowing it to be used multiple places
     this->fontDb->addApplicationFont(path);
 }
 
 void GameInfo::drawTitle() {
+
 // Draw the title text
     titleText = new QGraphicsTextItem(QString("Snakes & Ladders"));
     titleText->setFont(this->fontDb->font("Built Titling Rg", 0, 50));
@@ -101,3 +108,4 @@ void GameInfo::drawTitle() {
     titleText->setPos(titlePosX, titlePosY);
     game->scene->addItem(titleText);
 }
+

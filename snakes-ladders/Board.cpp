@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "Game.h"
+#include <QMapIterator>
 
 #include <QDebug>
 
@@ -30,6 +31,7 @@ void Board::setBoardPos(int boardPosX, int boardPosY) {
 }
 
 void Board::drawBoard(int boardPosX, int boardPosY, float scale) {
+
 // Set all the members to match the parameters
     this->setScale(scale);
     this->setBoardPos(boardPosX, boardPosY);
@@ -125,5 +127,5 @@ void Board::drawBigTile(int posX, int posY, float scale) {
 void Board::drawTile(int spriteNum, int spriteX, int spriteY, float scale) {
 
 // Draw a tile
-    tile = new Tile(spriteNum, spriteX, spriteY, scale, scale, this);
+    tile = new Tile(spriteNum, spriteX, spriteY, scale, this);
 }

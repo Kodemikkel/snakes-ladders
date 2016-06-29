@@ -1,6 +1,8 @@
 #include "Container.h"
 #include "Game.h"
 
+#include <QDebug>
+
 extern Game * game;
 
 Container::Container(QGraphicsItem * parent): QGraphicsRectItem(parent) {
@@ -26,7 +28,7 @@ void Container::Selection(int nPlayers, int sPieceNo, int w, int h, QGraphicsIte
     connect(subPieceMapper, SIGNAL(mapped(int)), this, SLOT(changePieceL(int)));
 
 // Selected piece
-    piece = new Piece(sPieceNo, 96, contentPosY - 32, 1, 1, this);
+    piece = new Piece(sPieceNo, 96, contentPosY - 32, 1, this);
 
 // Right arrow
     arrowR = new Arrow(192, contentPosY - 32, 1, true, this);
@@ -35,7 +37,7 @@ void Container::Selection(int nPlayers, int sPieceNo, int w, int h, QGraphicsIte
     connect(addPieceMapper, SIGNAL(mapped(int)), this, SLOT(changePieceR(int)));
 
 // Textbox for player name
-    pNameTextBox = new TextBox(game->info->names[nPlayers - 1], true, this);
+    pNameTextBox = new TextBox(game->info->playerNames[nPlayers - 1], true, this);
     pNameTextBox->setPos(288, contentPosY - 32);
 
 // Lock button
@@ -54,14 +56,15 @@ void Container::Overview(int ovPlayers, int ovPieceNo, int w, int h) {
     int ovPosY = this->rect().height() / 2;
 
 // Player piece
-    ovPiece = new Piece(ovPieceNo, 32, ovPosY - 32, 1, 1, this);
+    ovPiece = new Piece(ovPieceNo, 32, ovPosY - 32, 1, this);
 
 // Player name
-    ovTextBox = new TextBox(game->info->names[ovPlayers - 1], false, this);
+    ovTextBox = new TextBox(game->info->playerNames[ovPlayers - 1], false, this);
     ovTextBox->setPos(128, ovPosY - 32);
 }
 
 void Container::checkmark() {
+
 // TODO: Make positioning formula
     int posX = 800;
     int posY = 23;
@@ -72,6 +75,7 @@ void Container::checkmark() {
 }
 
 bool Container::compareSprites(int sprite1, int sprite2) {
+
 // Method for comparing two sprites (true if equal)
     if(sprite1 == sprite2) {
         return true;
@@ -81,11 +85,13 @@ bool Container::compareSprites(int sprite1, int sprite2) {
 }
 
 void Container::lock(int nPlayer) {
+
 // Lock selection
     if(game->info->locked[nPlayer - 1] == false) {
         this->lockBtn->setText("Unlock");
 
-        game->info->names[nPlayer - 1] = game->info->textBoxMap[nPlayer]->getText();
+        game->info->playerNames[nPlayer - 1] = game->info->tempPlayerNames[nPlayer]->getText();
+        game->info->playerPieces[nPlayer] = game->info->tempPlayerPieces[nPlayer]->getSpriteNum();
 
         this->pNameTextBox->setEditable(false);
         this->arrowL->setClickable(false);
@@ -95,6 +101,7 @@ void Container::lock(int nPlayer) {
         game->info->checkmarkMap.insert(nPlayer, checkmarkRect);
         game->info->locked[nPlayer - 1] = true;
     }
+
 // Unlock selection
     else {
         this->lockBtn->setText("Lock");
@@ -109,9 +116,10 @@ void Container::lock(int nPlayer) {
 }
 
 void Container::changePieceL(int nPlayer) {
+
 // Previous piece
 pieceCheckerL:
-    Piece * piece = game->info->piecesMap[nPlayer];
+    Piece * piece = game->info->tempPlayerPieces.value(nPlayer);
     int spriteNum = piece->getSpriteNum() - 1;
 
     if(spriteNum < game->info->getPieceSpriteStart()) {
@@ -120,7 +128,7 @@ pieceCheckerL:
     piece->setSpriteNum(spriteNum);
 
     for(int i = 1; i <= game->info->getPlayers(); i++) {
-        Piece * comparePiece = game->info->piecesMap[i];
+        Piece * comparePiece = game->info->tempPlayerPieces.value(i);
         int compareSpriteNum = comparePiece->getSpriteNum();
 
         if(spriteNum == compareSpriteNum && i != nPlayer) {
@@ -130,9 +138,10 @@ pieceCheckerL:
 }
 
 void Container::changePieceR(int nPlayer) {
+
 // Next piece
 pieceCheckerR:
-    Piece * piece = game->info->piecesMap[nPlayer];
+    Piece * piece = game->info->tempPlayerPieces.value(nPlayer);
     int spriteNum = piece->getSpriteNum() + 1;
 
     if(spriteNum > game->info->getPieceSpriteStart() + game->info->getPieceAmount() - 1) {
@@ -141,7 +150,7 @@ pieceCheckerR:
     piece->setSpriteNum(spriteNum);
 
     for(int i = 1; i <= game->info->getPlayers(); i++) {
-        Piece * comparePiece = game->info->piecesMap[i];
+        Piece * comparePiece = game->info->tempPlayerPieces.value(i);
         int compareSpriteNum = comparePiece->getSpriteNum();
 
         if(spriteNum == compareSpriteNum && i != nPlayer) {
