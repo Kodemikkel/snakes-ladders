@@ -233,6 +233,10 @@ void Game::drawTimer() {
 
 void Game::drawPlayerList() {
     playerListBox = new QGraphicsRectItem();
+    QString turn = QString::number(game->info->playerTurn);
+    turn = "Player " + turn + "'s turn";
+    playersTurn = new TextBox(turn, false, playerListBox);
+    playersTurn->setPos(0, playerListBox->boundingRect().y() - 32);
     playerListBox->setRect(0, 0, 480, 686);
     scene->addItem(playerListBox);
 

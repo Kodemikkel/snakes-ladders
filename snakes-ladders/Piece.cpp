@@ -105,9 +105,15 @@ void MoveablePiece::move() {
         this->moveTimer->resetTime();
         if(this->getStepsToTake() != 6) {
             game->info->playerTurn++;
+            QString turn = QString::number(game->info->playerTurn);
+            turn = "Player " + turn + "'s turn";
+            game->playersTurn->setText(turn);
         }
         if(game->info->playerTurn > game->info->getPlayers()) {
             game->info->playerTurn = 1;
+            QString turn = QString::number(game->info->playerTurn);
+            turn = "Player " + turn + "'s turn";
+            game->playersTurn->setText(turn);
         }
     }
 }

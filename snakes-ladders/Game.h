@@ -32,6 +32,7 @@ public:
     Dice * dice;
     int yFactor = 0;
     Ladder * ladder;
+    TextBox * playersTurn;
 
 public slots:
     void start();

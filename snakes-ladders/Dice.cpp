@@ -39,7 +39,6 @@ void Dice::rollDice() {
 // Check how many times the dice changed sprite
     if(this->getDiceSpriteCount() < 18) {
         int eyes = game->info->randNum(1, 6);
-        qDebug() << eyes;
         this->setSprite(eyes);
     } else {
         QSignalMapper * roller = new QSignalMapper(this);
@@ -50,7 +49,6 @@ void Dice::rollDice() {
         emit diceRolled();
         disconnect(roller, 0, game->board->players[game->info->playerTurn], 0);
         this->setDiceSpriteCount(0);
-        qDebug() << game->info->playerTurn;
     }
 
 // Add one to the "changed sprite" member
