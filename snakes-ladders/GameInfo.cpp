@@ -113,7 +113,9 @@ void GameInfo::drawTitle() {
 }
 
 int GameInfo::randNum(int low, int high) {
-    srand(time(NULL));
+    if(!srand) {
+        srand(time(NULL));
+    }
     int divisor = high - low + 1;
     int num = rand() % divisor + low;
     return num;
