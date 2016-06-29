@@ -1,6 +1,9 @@
 #include "GameInfo.h"
 #include "Game.h"
 #include "Piece.h"
+#include <ctime>
+#include <stdlib.h>
+
 #include <QDebug>
 
 extern Game * game;
@@ -109,3 +112,9 @@ void GameInfo::drawTitle() {
     game->scene->addItem(titleText);
 }
 
+int GameInfo::randNum(int low, int high) {
+    srand(time(NULL));
+    int divisor = high - low + 1;
+    int num = rand() % divisor + low;
+    return num;
+}

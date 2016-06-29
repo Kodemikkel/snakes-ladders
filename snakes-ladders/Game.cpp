@@ -2,6 +2,7 @@
 #include "Arrow.h"
 #include "Piece.h"
 #include "TextBox.h"
+#include "Ladder.h"
 #include <ctime>
 
 #include <QDebug>
@@ -26,6 +27,7 @@ Game::Game() {
 
 // Create object to store all information about the game
     info = new GameInfo();
+
 }
 
 void Game::displayMainMenu() {
@@ -183,6 +185,9 @@ void Game::back() {
 void Game::drawBoard(int boardPosX, int boardPosY) {
     board = new Board();
     board->drawBoard(boardPosX, boardPosY, .4375);
+
+    ladder = new Ladder();
+
     scene->addItem(board);
     this->spawnPiece();
 }
@@ -231,12 +236,11 @@ void Game::drawPlayerList() {
     playerListBox->setRect(0, 0, 480, 686);
     scene->addItem(playerListBox);
 
-    playerListBox->setPen(Qt::NoPen); // Removes border
+    playerListBox->setPen(Qt::NoPen);
 
     for(int i = 1; i <= this->info->getPlayers(); i++) {
         Container * playerList = new Container(playerListBox);
         int faceNum = this->info->getPiece(i);
-        qDebug() << "Fault is here" << faceNum;
         playerList->Overview(i, faceNum);
         playerList->setPos(0, 0 + 110 * (i - 1));
 

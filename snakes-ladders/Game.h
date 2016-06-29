@@ -11,6 +11,7 @@
 #include <QGraphicsView>
 #include <QSignalMapper>
 
+#include "Ladder.h"
 
 class Game: public QGraphicsView {
     Q_OBJECT
@@ -18,18 +19,19 @@ public:
 // Constructors
     Game();
 
+// Public methods
+    void displayMainMenu();
+    void spawnPiece();
+
 // Public members
+    Board * board;
     QGraphicsScene * scene;
     GameInfo * info;
     Button * pauseButton;
     MoveablePiece * player;
-    Board * board;
     Dice * dice;
     int yFactor = 0;
-
-// Public methods
-    void displayMainMenu();
-    void spawnPiece();
+    Ladder * ladder;
 
 public slots:
     void start();
