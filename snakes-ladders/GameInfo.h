@@ -42,6 +42,7 @@ public:
 // Public methods
     void addFont(QString path);
     void drawTitle();
+    int randNum(int low, int high);
 
 // Public members
     QGraphicsTextItem * titleText;

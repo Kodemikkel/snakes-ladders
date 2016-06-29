@@ -2,6 +2,8 @@
 #include "Game.h"
 #include <QGraphicsRectItem>
 
+#include <QDebug>
+
 extern Game * game;
 Dice::Dice(int spriteNum, QGraphicsItem * parent): QGraphicsPixmapItem(parent) {
     this->setSprite(spriteNum);
@@ -35,7 +37,8 @@ void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 void Dice::rollDice() {
 // Check how many times the dice changed sprite
     if(this->getDiceSpriteCount() < 18) {
-        int eyes = rand() % 6 + 1;
+        int eyes = game->info->randNum(1, 6);
+        qDebug() << eyes;
         this->setSprite(eyes);
     } else {
         this->diceTimer->resetTime();
