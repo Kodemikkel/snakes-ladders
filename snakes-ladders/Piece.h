@@ -10,7 +10,11 @@ class Piece: public QObject, public QGraphicsPixmapItem {
 public:
 
 // Constructors
-    Piece(int sprite, int posX, int posY, float scale, QGraphicsItem * parent = NULL);
+    Piece(int sprite,
+          int posX,
+          int posY,
+          float scale,
+          QGraphicsItem * parent = NULL);
 
 // Getters
     int getPosX();
@@ -44,7 +48,11 @@ class MoveablePiece: public Piece {
 public:
 
 // Constructors
-    MoveablePiece(int sprite, int posX, int posY, float scale, QGraphicsItem *parent);
+    MoveablePiece(int sprite,
+                  int posX,
+                  int posY,
+                  float scale,
+                  QGraphicsItem *parent);
 
 // Getters
     int getTileNum();
@@ -60,6 +68,7 @@ public:
 public slots:
     void move();
     void initMove(int stepsLeft);
+    void climbLadder();
 
 private:
 
@@ -67,6 +76,7 @@ private:
     int tileNum;
     int stepsLeft;
     int stepsToTake;
+    int endTile;
     Timer * moveTimer;
 };
 

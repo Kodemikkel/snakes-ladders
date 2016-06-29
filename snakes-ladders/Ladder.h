@@ -29,6 +29,7 @@ public:
     void tempInitLad();
 
 // Public members
+    QMap<int, int> ladders;
 
 private:
 
@@ -40,7 +41,6 @@ private:
     float lLength;
     float lAng;
     float scale;
-    QMap<int, int> ladders;
 };
 
 #endif // LADDER_H

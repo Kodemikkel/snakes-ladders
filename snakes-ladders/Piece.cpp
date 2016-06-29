@@ -5,7 +5,13 @@
 
 extern Game * game;
 
-Piece::Piece(int sprite, int posX, int posY, float scale, QGraphicsItem *parent): QGraphicsPixmapItem(parent) {
+Piece::Piece(int sprite,
+             int posX,
+             int posY,
+             float scale,
+             QGraphicsItem *parent):
+    QGraphicsPixmapItem(parent) {
+
     this->owner = "None";
     this->scale = scale;
     this->posX = posX;
@@ -43,7 +49,13 @@ void Piece::setSpriteNum(int num) {
 
 
 // MoveablePiece class - used for pieces on the board
-MoveablePiece::MoveablePiece(int sprite, int piecePosX, int piecePosY, float scale, QGraphicsItem *parent): Piece(sprite, piecePosX, piecePosY, scale, parent) {
+MoveablePiece::MoveablePiece(int sprite,
+                             int piecePosX,
+                             int piecePosY,
+                             float scale,
+                             QGraphicsItem *parent):
+    Piece(sprite, piecePosX, piecePosY, scale, parent) {
+
     this->setTileNum(1);
     this->forward = true;
     moveTimer = new Timer();
@@ -102,6 +114,14 @@ void MoveablePiece::move() {
     this->setStepsLeft(this->getStepsLeft() - 1);
 
     if(this->getStepsLeft() == 0) {
+        QMapIterator<int, int> i(game->ladder->ladders);
+        while(i.hasNext()) {
+            i.next();
+            if(this->getTileNum() == i.key()) {
+                this->endTile = i.value();
+                QTimer::singleShot(350, this, SLOT(climbLadder()));
+            }
+        }
         this->moveTimer->resetTime();
         if(this->getStepsToTake() != 6) {
             game->info->playerTurn++;
@@ -124,4 +144,9 @@ void MoveablePiece::initMove(int steps) {
     finalTileNum = this->getTileNum() + this->getStepsLeft();
     this->moveTimer->startTimer(350); // Time default 350
     this->forward = true;
+}
+
+void MoveablePiece::climbLadder() {
+    this->setTileNum(this->endTile);
+    this->endTile = NULL;
 }
