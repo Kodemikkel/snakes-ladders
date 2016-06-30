@@ -4,6 +4,10 @@
 #include "TextBox.h"
 #include "Ladder.h"
 #include <ctime>
+#include <QGraphicsWidget>
+#include <QPushButton>
+#include <QGraphicsProxyWidget>
+#include <QTextEdit>
 
 #include <QDebug>
 
@@ -17,24 +21,22 @@ Game::Game() {
     setFixedSize(1600, 900);
 
 // Set up the scene
-    scene = new QGraphicsScene();
-    scene->setSceneRect(0, 0, 1600, 900);
+    scene.setSceneRect(0, 0, 1600, 900);
 
     QImage bkg(":/imgs/background.jpg");
     QImage scaled = bkg.scaled(QSize(1600, 900));
-    scene->setBackgroundBrush(QBrush(scaled));
-    setScene(scene);
+    scene.setBackgroundBrush(QBrush(scaled));
+    setScene(&scene);
 
 // Create object to store all information about the game
     info = new GameInfo();
-
 }
 
 void Game::displayMainMenu() {
-    scene->clear();
+    scene.clear();
 
 // Create the title text
-    info->drawTitle();
+    this->info->drawTitle();
 
 // Create the play button
     playButton = new Button("Play", 400, 100);
@@ -42,7 +44,7 @@ void Game::displayMainMenu() {
     int playPosY = 300;
     playButton->setPos(playPosX, playPosY);
     connect(playButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-    scene->addItem(playButton);
+    scene.addItem(playButton);
 
 // Create the 'how to play' button
     tutButton = new Button("How to play", 400, 100);
@@ -50,7 +52,7 @@ void Game::displayMainMenu() {
     int tutPosY = 300;
     tutButton->setPos(tutPosX, tutPosY);
     connect(tutButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-    scene->addItem(tutButton);
+    scene.addItem(tutButton);
 
 // Create the options button
     optionsButton = new Button("Options", 400, 100);
@@ -58,7 +60,7 @@ void Game::displayMainMenu() {
     int optionsPosY = 475;
     optionsButton->setPos(optionsPosX, optionsPosY);
     connect(optionsButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-    scene->addItem(optionsButton);
+    scene.addItem(optionsButton);
 
 // Create the exit button
     quitButton = new Button("Quit", 400, 100);
@@ -66,7 +68,7 @@ void Game::displayMainMenu() {
     int quitPosY = 475;
     quitButton->setPos(quitPosX, quitPosY);
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
-    scene->addItem(quitButton);
+    scene.addItem(quitButton);
 }
 
 void Game::spawnPiece() {
@@ -98,7 +100,7 @@ void Game::start() {
 }
 
 void Game::displayPlayerSelect() {
-    scene->clear();
+    scene.clear();
 
     this->info->playerTurn = 1;
 
@@ -133,7 +135,7 @@ void Game::displayPlayerSelect() {
         if(p == info->getMaxPlayers()) {
             connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(displayMatchConfig(int)));
         }
-        scene->addItem(playerButton);
+        scene.addItem(playerButton);
     }
 
 // Create the back button
@@ -142,20 +144,20 @@ void Game::displayPlayerSelect() {
     int backPosY = 800;
     backButton->setPos(backPosX, backPosY);
     connect(backButton, SIGNAL(clicked()), this, SLOT(back()));
-    scene->addItem(backButton);
+    scene.addItem(backButton);
 }
 
 void Game::displayMatchConfig(int players) {
-    scene->clear();
+    scene.clear();
 
     this->info->setPlayers(players);
 
 // Create the player selection section
     for(int i = 1; i <= players; i++) {
-        selectionMenu = new Container();
-        selectionMenu->Selection(i, i + 16);
+        selectionMenu = new Container(672, 110);
+        selectionMenu->Selection(i, (i + this->info->getPieceSpriteStart()) - 1);
         selectionMenu->setPos(50, 70 + 110 * (i - 1));
-        scene->addItem(selectionMenu);
+        scene.addItem(selectionMenu);
 
         this->info->tempPlayerNames.insert(i, selectionMenu->pNameTextBox);
         this->info->tempPlayerPieces.insert(i, selectionMenu->piece);
@@ -167,7 +169,7 @@ void Game::displayMatchConfig(int players) {
     int backPosY = 780;
     backButton->setPos(backPosX, backPosY);
     connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-    scene->addItem(backButton);
+    scene.addItem(backButton);
 
 // Create the start button
     startButton = new Button("Start", 400, 100);
@@ -175,7 +177,7 @@ void Game::displayMatchConfig(int players) {
     int startPosY = 780;
     startButton->setPos(startPosX, startPosY);
     connect(startButton, SIGNAL(clicked()), this, SLOT(start()));
-    scene->addItem(startButton);
+    scene.addItem(startButton);
 }
 
 void Game::back() {
@@ -188,13 +190,13 @@ void Game::drawBoard(int boardPosX, int boardPosY) {
 
     ladder = new Ladder();
 
-    scene->addItem(board);
+    scene.addItem(board);
     this->spawnPiece();
 }
 
 void Game::drawGUI() {
+    scene.clear();
     srand(time(NULL));
-    scene->clear();
     drawBoard(30, 30);
     drawDice();
     drawTimer();
@@ -206,7 +208,7 @@ void Game::drawGUI() {
     int backPosY = 780;
     backButton->setPos(backPosX, backPosY);
     connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-    scene->addItem(backButton);
+    scene.addItem(backButton);
 
 // Create the pause button
     pauseButton = new Button("||", 192, 88);
@@ -214,21 +216,21 @@ void Game::drawGUI() {
     int pausePosY = 170;
     pauseButton->setPos(pausePosX, pausePosY);
     connect(pauseButton, SIGNAL(clicked()), timer, SLOT(pauseTime()));
-    scene->addItem(pauseButton);
+    scene.addItem(pauseButton);
 }
 
 void Game::drawDice() {
     int diceX = 1;
     dice = new Dice(diceX);
     connect(dice, SIGNAL(diceClicked()), dice, SLOT(rollDice()));
-    scene->addItem(dice);
+    scene.addItem(dice);
 }
 
 void Game::drawTimer() {
     timer = new Timer(192, 88, 900, 70);
     timer->startTimer(1000);
     timer->updateDisplay();
-    scene->addItem(timer);
+    scene.addItem(timer);
 }
 
 void Game::drawPlayerList() {
@@ -238,12 +240,12 @@ void Game::drawPlayerList() {
     playersTurn = new TextBox(turn, false, playerListBox);
     playersTurn->setPos(0, playerListBox->boundingRect().y() - 32);
     playerListBox->setRect(0, 0, 480, 686);
-    scene->addItem(playerListBox);
+    scene.addItem(playerListBox);
 
     playerListBox->setPen(Qt::NoPen);
 
     for(int i = 1; i <= this->info->getPlayers(); i++) {
-        Container * playerList = new Container(playerListBox);
+        Container * playerList = new Container(622, 110, playerListBox);
         int faceNum = this->info->getPiece(i);
         playerList->Overview(i, faceNum);
         playerList->setPos(0, 0 + 110 * (i - 1));

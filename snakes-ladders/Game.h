@@ -10,6 +10,7 @@
 #include "Timer.h"
 #include <QGraphicsView>
 #include <QSignalMapper>
+#include <QGraphicsGridLayout>
 
 #include "Ladder.h"
 
@@ -25,7 +26,7 @@ public:
 
 // Public members
     Board * board;
-    QGraphicsScene * scene;
+    QGraphicsScene scene;
     GameInfo * info;
     Button * pauseButton;
     MoveablePiece * player;

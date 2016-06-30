@@ -106,10 +106,10 @@ void GameInfo::drawTitle() {
     titleText = new QGraphicsTextItem(QString("Snakes & Ladders"));
     titleText->setFont(this->fontDb->font("Built Titling Rg", 0, 50));
 
-    int titlePosX = game->scene->width() / 2 - titleText->boundingRect().width() / 2;
+    int titlePosX = game->scene.width() / 2 - titleText->boundingRect().width() / 2;
     int titlePosY = 50;
     titleText->setPos(titlePosX, titlePosY);
-    game->scene->addItem(titleText);
+    game->scene.addItem(titleText);
 }
 
 int GameInfo::randNum(int low, int high) {

@@ -5,14 +5,12 @@
 
 extern Game * game;
 
-Container::Container(QGraphicsItem * parent): QGraphicsRectItem(parent) {
-
+Container::Container(int w, int h, QGraphicsItem * parent): QGraphicsRectItem(parent) {
+    this->setRect(0, 0, w, h);
+//    this->setPen(Qt::NoPen);
 }
 
-void Container::Selection(int nPlayers, int sPieceNo, int w, int h, QGraphicsItem *parent) {
-
-    this->setRect(0, 0, w, h);
-    this->setPen(Qt::NoPen);
+void Container::Selection(int nPlayers, int sPieceNo, QGraphicsItem *parent) {
 
     int contentPosY = this->rect().height() / 2;
 
@@ -48,10 +46,9 @@ void Container::Selection(int nPlayers, int sPieceNo, int w, int h, QGraphicsIte
     lockBtn->setPos(672, contentPosY - 16);
 }
 
-void Container::Overview(int ovPlayers, int ovPieceNo, int w, int h) {
+void Container::Overview(int ovPlayers, int ovPieceNo) {
 
-    this->setRect(0, 0, w, h);
-    this->setPen(Qt::NoPen);
+//    this->setPen(Qt::NoPen);
 
     int ovPosY = this->rect().height() / 2;
 
