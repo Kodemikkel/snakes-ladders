@@ -20,7 +20,7 @@ QBrush GameInfo::getBrush() {
 
 int GameInfo::getQuotient(int divident, int divisor) {
     int quotient = 0;
-    for(int i = 1; i < divident; i++) {
+    for(int i = 1; i <= divident; i++) {
         if(i % divisor == 0) {
             quotient++;
         }
@@ -85,7 +85,7 @@ QPixmap GameInfo::setSprite(int spriteNum, float scale, int spriteW, int spriteH
 
 // Algorithm for getting sprite coordinates from spriteNum
     int spriteX = ((spriteNum - 1) % 16) * 64;
-    int spriteY = this->getQuotient(spriteNum, 16) * 64;
+    int spriteY = this->getQuotient(spriteNum - 1, 16) * 64;
 
     QRect rect(spriteX, spriteY, spriteW, spriteH);
     QPixmap original(path);

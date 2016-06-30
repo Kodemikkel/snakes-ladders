@@ -15,9 +15,9 @@ Tile::Tile(int spriteNum,
     this->setPosX(posX);
     this->setPosY(posY);
     this->setScale(scale);
-    QPixmap pixmap = game->info->setSprite(spriteNum,
-                                           this->getScale());
-    this->setPixmap(pixmap);
+    this->setPixmap(game->info->setSprite(spriteNum,
+                                          this->getScale()));
+
     this->setOffset(posX, posY);
 }
 
