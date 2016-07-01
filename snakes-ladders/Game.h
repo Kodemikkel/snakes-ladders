@@ -21,6 +21,7 @@ public:
     Game();
 
 // Public methods
+    void resizeEvent(QResizeEvent * event);
     void displayMainMenu();
     void spawnPiece();
 
@@ -34,6 +35,7 @@ public:
     int yFactor = 0;
     Ladder * ladder;
     TextBox * playersTurn;
+    bool resized = false;
 
 public slots:
     void start();

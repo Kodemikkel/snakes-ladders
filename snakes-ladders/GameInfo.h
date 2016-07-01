@@ -65,6 +65,7 @@ public:
 
     bool locked[6] {false, false, false, false, false, false};
     int playerTurn = 1;
+    bool windowed = false;
 
 private:
     QBrush brush;

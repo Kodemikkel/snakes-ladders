@@ -4,8 +4,9 @@
 #include "TextBox.h"
 #include "Ladder.h"
 #include <ctime>
+
+#include <QGraphicsGridLayout>
 #include <QGraphicsWidget>
-#include <QPushButton>
 #include <QGraphicsProxyWidget>
 #include <QTextEdit>
 
@@ -14,61 +15,75 @@
 extern Game * game;
 
 Game::Game() {
-
-// Set up the screen
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(1600, 900);
-
-// Set up the scene
-    scene.setSceneRect(0, 0, 1600, 900);
-
-    QImage bkg(":/imgs/background.jpg");
-    QImage scaled = bkg.scaled(QSize(1600, 900));
-    scene.setBackgroundBrush(QBrush(scaled));
-    setScene(&scene);
-
 // Create object to store all information about the game
     info = new GameInfo();
+
+// Set up the screen
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    if(this->info->windowed) {
+        setFixedSize(1600, 900);
+    } else {
+        this->showMaximized();
+    }
+
+// Set up the scene
+    setScene(&scene);
+
+    QImage bkg(":/imgs/background.jpg");
+    QImage scaled = bkg.scaled(QSize(1920, 1080));
+    scene.setBackgroundBrush(QBrush(scaled));
+}
+
+void Game::resizeEvent(QResizeEvent * event) {
+    QWidget::resizeEvent(event);
+    scene.setSceneRect(0, 0, event->size().width(), event->size().height());
+    this->fitInView(scene.sceneRect());
+    if(this->width() != 256 && !this->resized) {
+        this->resized = true;
+        this->displayMainMenu();
+    }
 }
 
 void Game::displayMainMenu() {
     scene.clear();
 
-// Create the title text
-    this->info->drawTitle();
+    if(this->resized == true) {
+    // Create the title text
+        this->info->drawTitle();
 
-// Create the play button
-    playButton = new Button("Play", 400, 100);
-    int playPosX = 0;
-    int playPosY = 300;
-    playButton->setPos(playPosX, playPosY);
-    connect(playButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-    scene.addItem(playButton);
+    // Create the play button
+        playButton = new Button("Play", 400, 100);
+        int playPosX = 0;
+        int playPosY = 300;
+        playButton->setPos(playPosX, playPosY);
+        connect(playButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
+        scene.addItem(playButton);
 
-// Create the 'how to play' button
-    tutButton = new Button("How to play", 400, 100);
-    int tutPosX = this->width() - tutButton->boundingRect().width();
-    int tutPosY = 300;
-    tutButton->setPos(tutPosX, tutPosY);
-    connect(tutButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-    scene.addItem(tutButton);
+    // Create the 'how to play' button
+        tutButton = new Button("How to play", 400, 100);
+        int tutPosX = this->width() - tutButton->boundingRect().width();
+        int tutPosY = 300;
+        tutButton->setPos(tutPosX, tutPosY);
+        connect(tutButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
+        scene.addItem(tutButton);
 
-// Create the options button
-    optionsButton = new Button("Options", 400, 100);
-    int optionsPosX = 0;
-    int optionsPosY = 475;
-    optionsButton->setPos(optionsPosX, optionsPosY);
-    connect(optionsButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
-    scene.addItem(optionsButton);
+    // Create the options button
+        optionsButton = new Button("Options", 400, 100);
+        int optionsPosX = 0;
+        int optionsPosY = 475;
+        optionsButton->setPos(optionsPosX, optionsPosY);
+        connect(optionsButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
+        scene.addItem(optionsButton);
 
-// Create the exit button
-    quitButton = new Button("Quit", 400, 100);
-    int quitPosX = this->width() - quitButton->boundingRect().width();
-    int quitPosY = 475;
-    quitButton->setPos(quitPosX, quitPosY);
-    connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
-    scene.addItem(quitButton);
+    // Create the exit button
+        quitButton = new Button("Quit", 400, 100);
+        int quitPosX = this->width() - quitButton->boundingRect().width();
+        int quitPosY = 475;
+        quitButton->setPos(quitPosX, quitPosY);
+        connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
+        scene.addItem(quitButton);
+    }
 }
 
 void Game::spawnPiece() {
@@ -140,8 +155,8 @@ void Game::displayPlayerSelect() {
 
 // Create the back button
     backButton = new Button("Back", 400, 100);
-    int backPosX = 600;
-    int backPosY = 800;
+    int backPosX = this->width() / 2 - backButton->boundingRect().width() / 2;
+    int backPosY = this->height() - backButton->boundingRect().height();
     backButton->setPos(backPosX, backPosY);
     connect(backButton, SIGNAL(clicked()), this, SLOT(back()));
     scene.addItem(backButton);
@@ -155,9 +170,9 @@ void Game::displayMatchConfig(int players) {
 // Create the player selection section
     for(int i = 1; i <= players; i++) {
         selectionMenu = new Container(672, 110);
+        scene.addItem(selectionMenu);
         selectionMenu->Selection(i, (i + this->info->getPieceSpriteStart()) - 1);
         selectionMenu->setPos(50, 70 + 110 * (i - 1));
-        scene.addItem(selectionMenu);
 
         this->info->tempPlayerNames.insert(i, selectionMenu->pNameTextBox);
         this->info->tempPlayerPieces.insert(i, selectionMenu->piece);
@@ -166,15 +181,15 @@ void Game::displayMatchConfig(int players) {
 // Create the back button
     backButton = new Button("Back", 400, 100);
     int backPosX = 0;
-    int backPosY = 780;
+    int backPosY = this->height() - backButton->boundingRect().height();
     backButton->setPos(backPosX, backPosY);
     connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
     scene.addItem(backButton);
 
 // Create the start button
     startButton = new Button("Start", 400, 100);
-    int startPosX = 1200;
-    int startPosY = 780;
+    int startPosX = this->width() - startButton->boundingRect().width();
+    int startPosY = this->height() - startButton->boundingRect().height();;
     startButton->setPos(startPosX, startPosY);
     connect(startButton, SIGNAL(clicked()), this, SLOT(start()));
     scene.addItem(startButton);
@@ -204,8 +219,8 @@ void Game::drawGUI() {
 
 // Create the back button
     backButton = new Button("Back", 400, 100);
-    int backPosX = 1150;
-    int backPosY = 780;
+    int backPosX = this->width() - backButton->boundingRect().width();
+    int backPosY = this->height() - backButton->boundingRect().height();
     backButton->setPos(backPosX, backPosY);
     connect(backButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
     scene.addItem(backButton);

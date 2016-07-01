@@ -24,7 +24,8 @@ public:
 // Public methods
     void Selection(int nPlayers, int sPieceNo, QGraphicsItem * parent = NULL);
     void Overview(int ovPlayers, int ovPieceNo);
-    void checkmark();
+    void check(bool checked);
+    void autoPosition();
     bool compareSprites(int sprite1, int sprite2);
 
 // Public members

@@ -5,6 +5,8 @@
 #include <QColor>
 #include <QGraphicsTextItem>
 
+#include <QDebug>
+
 
 extern Game * game;
 

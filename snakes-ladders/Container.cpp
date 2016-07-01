@@ -20,55 +20,115 @@ void Container::Selection(int nPlayers, int sPieceNo, QGraphicsItem *parent) {
     this->lockMapper = new QSignalMapper(this);
 
 // Left arrow
-    arrowL = new Arrow(0, contentPosY - 32, 0, true, this);
+    arrowL = new Arrow(0, 0, 0, true, this);
     connect(arrowL, SIGNAL(arrowClick()), subPieceMapper, SLOT(map()));
     subPieceMapper->setMapping(arrowL, nPlayers);
     connect(subPieceMapper, SIGNAL(mapped(int)), this, SLOT(changePieceL(int)));
 
 // Selected piece
-    piece = new Piece(sPieceNo, 96, contentPosY - 32, 1, this);
+    piece = new Piece(sPieceNo, 0, 0, 1, this);
 
 // Right arrow
-    arrowR = new Arrow(192, contentPosY - 32, 1, true, this);
+    arrowR = new Arrow(0, 0, 1, true, this);
     connect(arrowR, SIGNAL(arrowClick()), addPieceMapper, SLOT(map()));
     addPieceMapper->setMapping(arrowR, nPlayers);
     connect(addPieceMapper, SIGNAL(mapped(int)), this, SLOT(changePieceR(int)));
 
 // Textbox for player name
     pNameTextBox = new TextBox(game->info->playerNames[nPlayers - 1], true, this);
-    pNameTextBox->setPos(288, contentPosY - 32);
 
 // Lock button
     lockBtn = new Button("Lock", 96, 32, this);
+
     connect(lockBtn, SIGNAL(clicked()), lockMapper, SLOT(map()));
     lockMapper->setMapping(lockBtn, nPlayers);
     connect(lockMapper, SIGNAL(mapped(int)), this, SLOT(lock(int)));
-    lockBtn->setPos(672, contentPosY - 16);
+
+    checkmarkRect = new QGraphicsPixmapItem();
+    checkmarkRect->setParentItem(this);
+    checkmarkRect->setPixmap(game->info->setSprite(10));
+    checkmarkRect->hide();
+
+    this->autoPosition();
 }
 
 void Container::Overview(int ovPlayers, int ovPieceNo) {
 
-//    this->setPen(Qt::NoPen);
-
-    int ovPosY = this->rect().height() / 2;
-
 // Player piece
-    ovPiece = new Piece(ovPieceNo, 32, ovPosY - 32, 1, this);
+    ovPiece = new Piece(ovPieceNo, 0, 0, 1, this);
 
 // Player name
     ovTextBox = new TextBox(game->info->playerNames[ovPlayers - 1], false, this);
-    ovTextBox->setPos(128, ovPosY - 32);
+
+    this->autoPosition();
 }
 
-void Container::checkmark() {
+void Container::check(bool checked) {
+    if(checked) {
+        checkmarkRect->show();
+    } else {
+        checkmarkRect->hide();
+    }
+}
 
-// TODO: Make positioning formula
-    int posX = 800;
-    int posY = 23;
-    checkmarkRect = new QGraphicsPixmapItem();
-    checkmarkRect->setParentItem(this);
-    checkmarkRect->setOffset(posX, posY);
-    checkmarkRect->setPixmap(game->info->setSprite(10));
+void Container::autoPosition() {
+
+// List storing all children
+    QList<QGraphicsItem *> list = this->childItems();
+
+    QListIterator<QGraphicsItem *> autoPos(list);
+    int maxHeight;
+    int xPos = 32;
+    int yPos = 0;
+    int marginBottom = 64;
+    float yPos1 = 0;
+        while(autoPos.hasNext()) {
+
+            autoPos.peekNext()->setPos(0, 0);
+            int height = autoPos.peekNext()->boundingRect().height();
+
+            if(!autoPos.hasPrevious()) {
+                maxHeight = height;
+            }
+
+            maxHeight = qMax(maxHeight, height);
+
+            if(autoPos.hasPrevious()) {
+                int prevWidth = autoPos.peekPrevious()->boundingRect().width();
+                QPointF prevPos = autoPos.peekPrevious()->pos();
+                xPos = prevPos.x() + prevWidth + 32;
+            }
+
+            loop:
+            if(xPos + autoPos.peekNext()->boundingRect().width() + 32 < game->width()) {
+
+                yPos1 = ((yPos + maxHeight / 2)
+                         + (autoPos.peekNext()->boundingRect().height() / 2)
+                         + (maxHeight / 2)
+                         - autoPos.peekNext()->boundingRect().height());
+                    autoPos.peekNext()->setPos(xPos,
+                                               yPos1);
+
+            }
+            else {
+                xPos = 32;
+                yPos += maxHeight + 32;
+                goto loop;
+            }
+            autoPos.next();
+        }
+    // Check for overflow
+        if(this->boundingRect().width() < this->childrenBoundingRect().width() || this->boundingRect().height() < this->childrenBoundingRect().height()) {
+
+    // If any - prepare scene for geometry change
+        this->prepareGeometryChange();
+
+    // And update the geometry
+        this->setRect(this->pos().x(),
+                      this->pos().y(),
+                      this->childrenBoundingRect().width() + 64,
+                      this->childrenBoundingRect().height() + marginBottom);
+        }
 }
 
 bool Container::compareSprites(int sprite1, int sprite2) {
@@ -94,7 +154,7 @@ void Container::lock(int nPlayer) {
         this->arrowL->setClickable(false);
         this->arrowR->setClickable(false);
 
-        this->checkmark();
+        this->check(true);
         game->info->checkmarkMap.insert(nPlayer, checkmarkRect);
         game->info->locked[nPlayer - 1] = true;
     }
@@ -107,7 +167,7 @@ void Container::lock(int nPlayer) {
         this->arrowL->setClickable(true);
         this->arrowR->setClickable(true);
         checkMark = game->info->checkmarkMap[nPlayer];
-        delete checkMark;
+        this->check(false);
         game->info->locked[nPlayer - 1] = false;
     }
 }
