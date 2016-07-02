@@ -14,15 +14,11 @@ Game::Game() {
 // Set up the screen
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(1600, 900);
+    //setFixedSize(1600, 900);
+    this->showMaximized();
 
 // Set up the scene
-    scene = new QGraphicsScene();
-    scene->setSceneRect(0, 0, 1600, 900);
-
-    QImage bkg(":/imgs/background.jpg");
-    QImage scaled = bkg.scaled(QSize(1600, 900));
-    scene->setBackgroundBrush(QBrush(scaled));
+    scene = new Scene();
     setScene(scene);
 
 // Create object to store all information about the game
@@ -107,24 +103,20 @@ void Game::displayPlayerSelect() {
 
 // Create all the buttons, and map the signal to the correct slot using QSignalMapper
     signalMapper = new QSignalMapper(this);
-    yFactor = 0;
 
     for(int p = 1; p <= info->getMaxPlayers(); p++) {
         QString playNum = QString::number(p);
         playerButton = new Button(playNum + " players", 400, 100);
-        playerButton->setPen(Qt::NoPen);
 
-// TODO fix formula for positioning buttons
         int posX, posY;
 
         if(p % 2 == 1) {
             posX = 0;
-            posY = 300 + yFactor * 175;
+            posY = 300 + (((p - 1) / 2) * 175);
         }
         else if(p % 2 == 0) {
             posX = this->width() - playerButton->boundingRect().width();
-            posY = 300 + yFactor * 175;
-            yFactor++;
+            posY = 300 + (((p - 2) / 2) * 175);
         }
 
         playerButton->setPos(posX, posY);
@@ -233,9 +225,18 @@ void Game::drawTimer() {
 
 void Game::drawPlayerList() {
     playerListBox = new QGraphicsRectItem();
-    QString turn = QString::number(game->info->playerTurn);
-    turn = "Player " + turn + "'s turn";
-    playersTurn = new TextBox(turn, false, playerListBox);
+    QString pName = this->info->playerNames[0];
+    QString lastChar = pName.right(1);
+    QChar charS = 's';
+    QChar charX = 'x';
+    QChar charZ = 'z';
+    if(lastChar == charS || lastChar == charX || lastChar == charZ) {
+        pName = pName + "' turn";
+    }
+    else {
+        pName = pName + "'s turn";
+    }
+    playersTurn = new TextBox(pName, false, playerListBox);
     playersTurn->setPos(0, playerListBox->boundingRect().y() - 32);
     playerListBox->setRect(0, 0, 480, 686);
     scene->addItem(playerListBox);
@@ -249,6 +250,12 @@ void Game::drawPlayerList() {
         playerList->setPos(0, 0 + 110 * (i - 1));
 
         this->info->locked[i - 1] = false;
+
+        for(int p = 0; p < this->info->getPlayers(); p++) {
+            this->info->finished.push_back(false);
+        }
+
+
     }
 
     playerListBox->setPos(1120, 70);

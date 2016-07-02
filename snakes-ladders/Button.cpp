@@ -12,6 +12,7 @@ Button::Button(QString name, int w, int h, QGraphicsItem * parent): QGraphicsRec
 // Draw the button
     this->setRect(0, 0, w, h);
     this->setBrush(game->info->getBrush());
+    this->setPen(Qt::NoPen);
 
 // Draw the text
     this->text = new QGraphicsTextItem(name, this);

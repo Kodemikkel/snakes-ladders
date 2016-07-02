@@ -64,6 +64,7 @@ public:
         << "Player 7");
 
     bool locked[6] {false, false, false, false, false, false};
+    std::vector<bool> finished;
     int playerTurn = 1;
 
 private:

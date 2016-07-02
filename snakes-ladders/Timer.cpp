@@ -2,6 +2,7 @@
 #include "Game.h"
 #include <QBrush>
 #include <QDebug>
+#include <QGraphicsRectItem>
 
 extern Game * game;
 
@@ -76,11 +77,19 @@ void Timer::pauseTime() {
     if(game->info->getPause()) {
         tTimer->start(1000);
         game->info->setPause(false);
-        game->pauseButton->setText("||");
+        game->pauseButton->setVisible(true);
+
+
+        game->scene->removeItem(overlay);
+        delete overlay;
+
     }
     else {
         tTimer->stop();
         game->info->setPause(true);
-        game->pauseButton->setText("Start");
+        game->pauseButton->setVisible(false);
+
+        overlay = new Overlay();
+        game->scene->addItem(overlay);
     }
 }

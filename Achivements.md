@@ -48,3 +48,33 @@ Play 1000 games
 
 ###### No-lifer
 Play 10000 games
+
+###### ???
+Finish a game within 10 minutes
+
+###### ???
+Finish a game within 5 minutes
+
+###### ???
+Finish a game within 2 minutes
+
+###### ???
+Finish a game within 1 minute
+
+###### ???
+Finish a game within 30 seconds
+
+###### ???
+Finish a game that lasts more than 30 minutes
+
+###### ???
+Finish a game that lasts more than 1 hour
+
+###### ???
+Finish a game that lasts more than 2 hours
+
+###### ???
+Finish a game that lasts more than 5 hours
+
+###### Sleeper
+Finish a game that lasts more than 10 hours

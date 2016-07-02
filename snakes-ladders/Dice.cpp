@@ -29,9 +29,24 @@ void Dice::setDiceSpriteCount(int spriteCount) {
     this->diceSpriteCount = spriteCount;
 }
 
-void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    this->diceTimer->startTimer(85);
-    emit diceClicked();
+void Dice::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+    if(game->info->getPause() == false) {
+        this->diceTimer->startTimer(85);
+        emit diceClicked();
+    }
+}
+
+void Dice::keyPressEvent(QKeyEvent * event) {
+    qDebug() << event;
+    qDebug() << event->key();
+    if(event->key() == Qt::Key_Space) {
+        this->diceTimer->startTimer(85);
+        emit diceClicked();
+    }
+}
+
+void Dice::keyReleaseEvent(QKeyEvent * event) {
+    qDebug() << event->key();
 }
 
 void Dice::rollDice() {

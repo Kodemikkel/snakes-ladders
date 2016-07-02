@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
 #include <QObject>
 
 class Dice: public QObject, public QGraphicsPixmapItem {
@@ -27,7 +28,9 @@ public:
 
 
 // Events
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent * event);
+    void keyPressEvent(QKeyEvent * event);
+    void keyReleaseEvent(QKeyEvent * event);
 
 signals:
     void diceClicked();
