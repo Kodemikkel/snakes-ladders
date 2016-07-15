@@ -11,11 +11,15 @@
 #include <QFontDatabase>
 #include "Container.h"
 #include "Piece.h"
+#include <fstream>
 
 class GameInfo {
 public:
 // Constructors
     GameInfo();
+
+// Destructors
+    ~GameInfo();
 
 // Getters
     QBrush getBrush();
@@ -66,6 +70,9 @@ public:
     bool locked[6] {false, false, false, false, false, false};
     int playerTurn = 1;
     bool windowed = false;
+    int theme = 1;
+    float scale;
+    std::fstream file;
 
 private:
     QBrush brush;

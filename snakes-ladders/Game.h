@@ -42,6 +42,7 @@ public slots:
     void displayPlayerSelect();
     void displayMatchConfig(int players);
     void back();
+    void displayOptions();
 
 private:
     void drawBoard(int x, int y);

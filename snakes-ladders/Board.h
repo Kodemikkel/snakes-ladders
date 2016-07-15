@@ -31,16 +31,16 @@ public:
 private:
 
 // Private methods
-    void drawBigTile(int posX, int posY, float scale = 1);
-    void drawTile(int spriteNum, int spriteX, int spriteY, float scale = 0.4375);
+    void drawBigTile(float posX, float posY, float scale = 1);
+    void drawTile(int spriteNum, int posX, int posY, float scale = 0.4375);
 
 // Private members
     Tile * tile;
     float scale;
     int boardPosX;
     int boardPosY;
-    int tileSpriteX;
-    int tileSpriteY;
+    int tilePosX;
+    int tilePosY;
     int tileNumType = 0;
     int tileSpriteNum = 49;
     int tileNumVal = 100;

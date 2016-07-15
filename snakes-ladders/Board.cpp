@@ -41,13 +41,13 @@ void Board::drawBoard(int boardPosX, int boardPosY, float scale) {
         for(int j = 0; j < 10; j++) {
             drawBigTile(boardPosX + j * 3 * 64 * scale,
                         boardPosY + i * 3 * 64 * scale,
-                        0.4375);
+                        scale);
         }
     }
 
 }
 
-void Board::drawBigTile(int posX, int posY, float scale) {
+void Board::drawBigTile(float posX, float posY, float scale) {
 
 // Array with tileNum to tell what texture to use in a tile â 3 x 3 pixmaps
     const int tileArray[3][3] = {
@@ -61,13 +61,13 @@ void Board::drawBigTile(int posX, int posY, float scale) {
 // Draw every pixmap in the tile, with shadows and numbers
     for(int y = 0; y < tileArrayLength; y++) {
         for(int x = 0; x < tileArrayLength; x++) {
-            tileSpriteX = posX + 64 * x * scale;
-            tileSpriteY = posY + 64 * y * scale;
+            tilePosX = posX + 64 * x * scale;
+            tilePosY = posY + 64 * y * scale;
 
             int spriteNum = tileArray[y][x];
 
 // Draw the main pixmap for the corresponding place in the tile
-            drawTile(spriteNum, tileSpriteX, tileSpriteY, scale);
+            drawTile(spriteNum, tilePosX, tilePosY, scale);
 
             if(x % 3 == 0) {
 
@@ -124,8 +124,8 @@ void Board::drawBigTile(int posX, int posY, float scale) {
     }
 }
 
-void Board::drawTile(int spriteNum, int spriteX, int spriteY, float scale) {
+void Board::drawTile(int spriteNum, int posX, int posY, float scale) {
 
 // Draw a tile
-    tile = new Tile(spriteNum, spriteX, spriteY, scale, this);
+    tile = new Tile(spriteNum, posX, posY, scale, this);
 }

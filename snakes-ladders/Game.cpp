@@ -5,16 +5,13 @@
 #include "Ladder.h"
 #include <ctime>
 
-#include <QGraphicsGridLayout>
-#include <QGraphicsWidget>
-#include <QGraphicsProxyWidget>
-#include <QTextEdit>
 
 #include <QDebug>
 
 extern Game * game;
 
 Game::Game() {
+
 // Create object to store all information about the game
     info = new GameInfo();
 
@@ -43,6 +40,9 @@ void Game::resizeEvent(QResizeEvent * event) {
         this->resized = true;
         this->displayMainMenu();
     }
+
+    this->info->scale = (float)this->width() / 3840;
+    qDebug() << this->info->scale;
 }
 
 void Game::displayMainMenu() {
@@ -199,9 +199,16 @@ void Game::back() {
     displayMainMenu();
 }
 
+void Game::displayOptions() {
+
+// TODO: Add options
+    scene.clear();
+
+}
+
 void Game::drawBoard(int boardPosX, int boardPosY) {
     board = new Board();
-    board->drawBoard(boardPosX, boardPosY, .4375);
+    board->drawBoard(boardPosX, boardPosY, this->info->scale);
 
     ladder = new Ladder();
 

@@ -4,6 +4,9 @@
 #include <ctime>
 #include <stdlib.h>
 
+#include "json.hpp"
+using json = nlohmann::json;
+
 #include <QDebug>
 
 extern Game * game;
@@ -12,6 +15,56 @@ GameInfo::GameInfo() {
     fontDb = new QFontDatabase;
     this->setupBrush();
     this->addFont(":/fonts/built_titling_bd.ttf");
+
+    this->file.open("options.json");
+    json j;
+    j["windowed"] = this->windowed;
+    j["theme"] = this->theme;
+    j["res"]["16:9"]["1"] = {
+        {"Height", 360},
+        {"Width", 640}
+    };
+    j["res"]["16:9"]["2"] = {
+        {"Height", 405},
+        {"Width", 720}
+    };
+    j["res"]["16:9"]["3"] = {
+        {"Height", 480},
+        {"Width", 848}
+    };
+    j["res"]["16:9"]["4"] = {
+        {"Height", 540},
+        {"Width", 960}
+    };
+    j["res"]["16:9"]["5"] = {
+        {"Height", 576},
+        {"Width", 1024}
+    };
+    j["res"]["16:9"]["6"] = {
+        {"Height", 720},
+        {"Width", 1280}
+    };
+    j["res"]["16:9"]["7"] = {
+        {"Height", 768},
+        {"Width", 1366}
+    };
+    j["res"]["16:9"]["8"] = {
+        {"Height", 900},
+        {"Width", 1600}
+    };
+    j["res"]["16:9"]["9"] = {
+        {"Height", 1080},
+        {"Width", 1920}
+    };
+
+    if(this->file.is_open()) {
+        this->file << j.dump(2);
+        this->file.close();
+    }
+}
+
+GameInfo::~GameInfo() {
+
 }
 
 QBrush GameInfo::getBrush() {
