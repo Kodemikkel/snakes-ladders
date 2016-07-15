@@ -6,13 +6,14 @@
 #include "Container.h"
 #include "Dice.h"
 #include "GameInfo.h"
+#include "Ladder.h"
+#include "Scene.h"
 #include "Tile.h"
 #include "Timer.h"
 #include <QGraphicsView>
 #include <QSignalMapper>
 #include <QGraphicsGridLayout>
 
-#include "Ladder.h"
 
 class Game: public QGraphicsView {
     Q_OBJECT
@@ -27,15 +28,15 @@ public:
 
 // Public members
     Board * board;
-    QGraphicsScene scene;
+    Scene scene;
     GameInfo * info;
     Button * pauseButton;
     MoveablePiece * player;
     Dice * dice;
-    int yFactor = 0;
     Ladder * ladder;
     TextBox * playersTurn;
     bool resized = false;
+    Timer * timer;
 
 public slots:
     void start();
@@ -53,7 +54,6 @@ private:
 
     Piece * piece;
     Container * selectionMenu;
-    Timer * timer;
     Button * playButton;
     Button * tutButton;
     Button * optionsButton;

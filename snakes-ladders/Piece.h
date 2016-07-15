@@ -65,6 +65,9 @@ public:
     void setStepsToTake(int stepsToTake);
 
 
+    bool finished[];
+
+
 public slots:
     void move();
     void initMove(int stepsLeft);

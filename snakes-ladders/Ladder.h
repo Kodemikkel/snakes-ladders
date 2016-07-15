@@ -33,7 +33,10 @@ public:
 
 private:
 
-    // Private members
+//Private methods
+    int coordRef(int tile, char axis);
+
+// Private members
     int aPosX;
     int aPosY;
     int bPosX;

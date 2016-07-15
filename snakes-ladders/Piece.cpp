@@ -1,5 +1,5 @@
-#include "Piece.h"
 #include "Game.h"
+#include "Piece.h"
 
 #include <QDebug>
 
@@ -95,6 +95,7 @@ void MoveablePiece::setStepsToTake(int stepsToTake) {
 
 void MoveablePiece::move() {
     int newTileNum;
+    bool finish = false;
 
     if(this->forward) {
         newTileNum = this->getTileNum() + 1;
@@ -123,17 +124,40 @@ void MoveablePiece::move() {
             }
         }
         this->moveTimer->resetTime();
-        if(this->getStepsToTake() != 6) {
-            game->info->playerTurn++;
-            QString turn = QString::number(game->info->playerTurn);
-            turn = "Player " + turn + "'s turn";
-            game->playersTurn->setText(turn);
+        if(this->getTileNum() == 100) {
+            game->info->finished[game->info->playerTurn - 1] = true;
+            game->timer->pauseTime();
         }
-        if(game->info->playerTurn > game->info->getPlayers()) {
-            game->info->playerTurn = 1;
-            QString turn = QString::number(game->info->playerTurn);
-            turn = "Player " + turn + "'s turn";
-            game->playersTurn->setText(turn);
+        nextPlayer:
+        if(std::all_of(std::begin(game->info->finished),
+                       std::end(game->info->finished),
+                       [](bool i) {
+                            return i;
+                        })) {
+            finish = true;
+            game->displayMainMenu();
+        }
+
+        if(this->getStepsToTake() != 6 && !finish) {
+            game->info->playerTurn++;
+            if(game->info->playerTurn > game->info->getPlayers()) {
+                game->info->playerTurn = 1;
+            }
+            if(game->info->finished[game->info->playerTurn - 1]) {
+                goto nextPlayer;
+            }
+            QString pName = game->info->playerNames[game->info->playerTurn - 1];
+            QString lastChar = pName.right(1);
+            QChar charS = 's';
+            QChar charX = 'x';
+            QChar charZ = 'z';
+            if(lastChar == charS || lastChar == charX || lastChar == charZ) {
+                pName = pName + "' turn";
+            }
+            else {
+                pName = pName + "'s turn";
+            }
+            game->playersTurn->setText(pName);
         }
     }
 }

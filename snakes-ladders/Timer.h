@@ -2,11 +2,14 @@
 #define TIMER_H
 
 #include "TextBox.h"
+#include "Overlay.h"
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
 #include <QObject>
 #include <QTime>
 #include <QTimer>
+
+
 
 
 class Timer: public QObject, public QGraphicsRectItem {
@@ -41,6 +44,7 @@ private:
     QTime * tTime;
     QTime tNewTime;
     QString tText;
+    Overlay * overlay;
 
     int time, tPosX, tPosY;
 };

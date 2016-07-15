@@ -26,7 +26,9 @@ SOURCES += main.cpp \
     GameInfo.cpp \
     Container.cpp \
     Timer.cpp \
-    Ladder.cpp
+    Ladder.cpp \
+    Overlay.cpp \
+    Scene.cpp
 
 HEADERS  += \
     Button.h \
@@ -40,7 +42,9 @@ HEADERS  += \
     GameInfo.h \
     Container.h \
     Timer.h \
-    Ladder.h
+    Ladder.h \
+    Overlay.h \
+    Scene.h
 
 FORMS    +=
 

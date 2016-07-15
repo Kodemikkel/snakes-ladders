@@ -10,8 +10,7 @@ extern Game * game;
 
 Ladder::Ladder(): QGraphicsPixmapItem(game->board) {
 
-// Call temporary ladder initializing method
-    this->tempInitLad();
+    this->initLadders();
 }
 
 void Ladder::makeLadder(int tileA, int tileB) {
@@ -35,7 +34,7 @@ void Ladder::makeLadder(int tileA, int tileB) {
         xDir = 1;
         xLength = bPosX - aPosX;
     }
-    else if(aPosX = bPosX) {
+    else if(aPosX == bPosX) {
 // Detects if it is a vertical ladder
         xLength = NULL;
         vertLad = true;
@@ -123,11 +122,9 @@ void Ladder::drawLadder(int posX,
 }
 
 void Ladder::initLadders() {
-    int maxLads = game->info->randNum(5, 7);
+    int maxLads = game->info->randNum(10, 14);
     int start, stop;
-    maxLads = NULL; // Remove this line when next TODO is done
 
-// TODO: Fix random algorithm
     for(int lad = 0; lad < maxLads; lad++) {
 
     createLadder:
@@ -138,7 +135,11 @@ void Ladder::initLadders() {
 
 // Get random stop tile
         stop = game->info->randNum(11, 98);
-        if(stop == start || start - stop > 50 || stop - start > 50) {
+        if(stop == start ||
+           //start - stop > 50 ||
+           //stop - start > 50 ||
+           this->coordRef(start, 'X') - this->coordRef(stop, 'X') > 4 ||
+           this->coordRef(stop, 'X') - this->coordRef(start, 'X') > 4) {
             goto stop;
         }
         else if(game->board->tileRef[start]->getPosY() ==
@@ -150,8 +151,16 @@ void Ladder::initLadders() {
         QMapIterator<int, int> i(ladders);
         while(i.hasNext()) {
             i.next();
-            if(i.key() == start || i.key() == stop ||
-                    i.value() == start || i.value() == stop) {
+            /*if(this->coordRef(i.key(), 'X') - this->coordRef(start, 'X') < 3 &&
+               this->coordRef(start, 'X') - this->coordRef(i.key(), 'X') < 3 ||
+               this->coordRef(i.value(), 'X') - this->coordRef(stop, 'X') < 3 &&
+               this->coordRef(stop, 'X') - this->coordRef(i.value(), 'X') < 3) {
+                goto createLadder;
+            }*/
+            if(i.key() == start ||
+               i.key() == stop ||
+               i.value() == start ||
+               i.value() == stop) {
                 goto createLadder;
             }
         }
@@ -191,5 +200,17 @@ void Ladder::tempInitLad() {
     while(i.hasNext()) {
         i.next();
         this->makeLadder(i.key(), i.value());
+    }
+}
+
+int Ladder::coordRef(int tile, char axis) {
+    if(axis == 'X' && game->info->getQuotient((tile - 1), 10) % 2 == 1) {
+        return 10 - ((tile - ((game->info->getQuotient((tile - 1), 10)) * 10)) - 1);
+    }
+    else if(axis == 'X' && game->info->getQuotient((tile - 1), 10) % 2 == 0) {
+        return tile - ((game->info->getQuotient((tile - 1), 10)) * 10);
+    }
+    else if(axis == 'Y') {
+        return 10 - (game->info->getQuotient((tile - 1), 10));
     }
 }
