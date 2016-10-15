@@ -230,7 +230,7 @@ void Game::drawGUI() {
 
 // Create the pause button
     pauseButton = new Button("||", 192, 88);
-    int pausePosX = 900;
+    int pausePosX = this->board->getBoardWidth() + 60;
     int pausePosY = 170;
     pauseButton->setPos(pausePosX, pausePosY);
     connect(pauseButton, SIGNAL(clicked()), timer, SLOT(pauseTime()));
@@ -240,12 +240,13 @@ void Game::drawGUI() {
 void Game::drawDice() {
     int diceX = 1;
     dice = new Dice(diceX);
+    dice->setPos(this->board->getBoardWidth() + 60, (this->board->getBoardHeight() + 30) - dice->boundingRect().height());
     connect(dice, SIGNAL(diceClicked()), dice, SLOT(rollDice()));
     scene.addItem(dice);
 }
 
 void Game::drawTimer() {
-    timer = new Timer(192, 88, 900, 70);
+    timer = new Timer(192, 88, this->board->getBoardWidth() + 60, 70);
     timer->startTimer(1000);
     timer->updateDisplay();
     scene.addItem(timer);
@@ -286,5 +287,5 @@ void Game::drawPlayerList() {
 
     }
 
-    playerListBox->setPos(1120, 70);
+    playerListBox->setPos(this->board->getBoardWidth() + 60 + this->timer->boundingRect().width() + 32, 70);
 }

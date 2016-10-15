@@ -20,6 +20,7 @@ public:
 // Setters
     void setSprite(int spriteNum);
     void setDiceSpriteCount(int spriteCount);
+    void setPos(int posX, int posY);
 
 // Public methods
 

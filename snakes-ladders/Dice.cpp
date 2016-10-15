@@ -21,12 +21,15 @@ int Dice::getDiceSpriteCount() {
 
 void Dice::setSprite(int spriteNum) {
     this->setPixmap(game->info->setSprite((spriteNum * 2 - 1) + 224, 1, 128, 128));
-    setOffset(900, 742);
     this->spriteNum = spriteNum;
 }
 
 void Dice::setDiceSpriteCount(int spriteCount) {
     this->diceSpriteCount = spriteCount;
+}
+
+void Dice::setPos(int posX, int posY) {
+    this->setOffset(posX, posY);
 }
 
 void Dice::mousePressEvent(QGraphicsSceneMouseEvent * event) {

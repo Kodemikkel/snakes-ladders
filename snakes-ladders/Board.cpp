@@ -21,6 +21,14 @@ int Board::getBoardPosY() {
     return this->boardPosY;
 }
 
+int Board::getBoardWidth() {
+    return this->width;
+}
+
+int Board::getBoardHeight() {
+    return this->height;
+}
+
 void Board::setScale(float scale) {
     this->scale = scale;
 }
@@ -28,6 +36,14 @@ void Board::setScale(float scale) {
 void Board::setBoardPos(int boardPosX, int boardPosY) {
     this->boardPosX = boardPosX;
     this->boardPosY = boardPosY;
+}
+
+void Board::setBoardWidth(int width) {
+    this->width = width;
+}
+
+void Board::setBoardHeight(int height) {
+    this->height = height;
 }
 
 void Board::drawBoard(int boardPosX, int boardPosY, float scale) {
@@ -38,7 +54,12 @@ void Board::drawBoard(int boardPosX, int boardPosY, float scale) {
 
 // Draw 10 x 10 tiles til draw the complete board
     for(int i = 0; i < 10; i++) {
+        this->height = this->getBoardHeight() + 192 * scale;
         for(int j = 0; j < 10; j++) {
+            if(this->widthCount < 10) {
+                this->width = this->getBoardWidth() + 192 * scale;
+                this->widthCount++;
+            }
             drawBigTile(boardPosX + j * 3 * 64 * scale,
                         boardPosY + i * 3 * 64 * scale,
                         scale);
@@ -67,7 +88,7 @@ void Board::drawBigTile(float posX, float posY, float scale) {
             int spriteNum = tileArray[y][x];
 
 // Draw the main pixmap for the corresponding place in the tile
-            drawTile(spriteNum, tilePosX, tilePosY, scale);
+            this->drawTile(spriteNum, tilePosX, tilePosY, scale);
 
             if(x % 3 == 0) {
 
