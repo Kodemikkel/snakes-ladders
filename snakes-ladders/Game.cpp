@@ -28,8 +28,8 @@ Game::Game() {
     setScene(&scene);
 
     QImage bkg(":/imgs/background.jpg");
-    QImage scaled = bkg.scaled(QSize(1920, 1080));
-    scene.setBackgroundBrush(QBrush(scaled));
+    //QImage scaled = bkg.scaled(QSize(1920, 1080));
+    scene.setBackgroundBrush(QBrush(bkg));
 }
 
 void Game::resizeEvent(QResizeEvent * event) {
@@ -65,7 +65,7 @@ void Game::displayMainMenu() {
         int tutPosX = this->width() - tutButton->boundingRect().width();
         int tutPosY = 300;
         tutButton->setPos(tutPosX, tutPosY);
-        connect(tutButton, SIGNAL(clicked()), this, SLOT(displayPlayerSelect()));
+        connect(tutButton, SIGNAL(clicked()), this, SLOT(displayHowTo()));
         scene.addItem(tutButton);
 
     // Create the options button
@@ -95,6 +95,28 @@ void Game::spawnPiece() {
     for(int i = 1; i <= this->info->getPlayers(); i++) {
         player = new MoveablePiece(this->info->getPiece(i), piecePosX + (i * 6), piecePosY, pieceScale, board);
         this->board->players.insert(i, player);
+    }
+}
+
+void Game::generateList(QStringList list,
+                        bool ordered,
+                        int posX,
+                        int posY,
+                        int posYFactor,
+                        QGraphicsItem * parent) {
+    for(int i = 0; i < list.length(); i++) {
+        QString listItemPrefix;
+        if(ordered) {
+            listItemPrefix = QString::number(i + 1);
+            listItemPrefix.append(". ");
+        }
+        else {
+            listItemPrefix = QString("* ");
+        }
+        QString * listItemText = new QString(list[i]);
+        listItemText->prepend(listItemPrefix);
+        TextBox * listItem = new TextBox(*listItemText, false, parent);
+        listItem->setPos(posX, posY + posYFactor * i);
     }
 }
 
@@ -193,6 +215,40 @@ void Game::displayMatchConfig(int players) {
 
 void Game::back() {
     displayMainMenu();
+}
+
+void Game::displayHowTo() {
+    scene.clear();
+    this->howToContainer = new Container((this->width() / 2) - 64,
+                                         this->height() - 64);
+    howToContainer->setPos(this->scene.width() / 2 -
+                            this->howToContainer->boundingRect().width() / 2,
+                           32);
+
+    this->howToTitle = new QGraphicsTextItem(QString("Instructions"),
+                                             howToContainer);
+    howToTitle->setFont(this->info->fontDb->font("Built Titling Rg", 0, 40));
+    howToTitle->setPos((howToContainer->boundingRect().width() / 2) -
+                        howToTitle->boundingRect().width() / 2, 0);
+
+    this->generateList(this->info->instructions, true, 50, 60, 100, howToContainer);
+    this->scene.addItem(howToContainer);
+
+// Create the back button
+    backButton = new Button("Back", 400, 100);
+    int backPosX = 0;
+    int backPosY = this->height() - backButton->boundingRect().height();
+    backButton->setPos(backPosX, backPosY);
+    connect(backButton, SIGNAL(clicked()), this, SLOT(back()));
+    scene.addItem(backButton);
+
+// Create the start button
+    startButton = new Button("Start", 400, 100);
+    int startPosX = this->width() - startButton->boundingRect().width();
+    int startPosY = this->height() - startButton->boundingRect().height();;
+    startButton->setPos(startPosX, startPosY);
+    connect(startButton, SIGNAL(clicked()), this, SLOT(start()));
+    scene.addItem(startButton);
 }
 
 void Game::displayOptions() {

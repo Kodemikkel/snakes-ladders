@@ -10,7 +10,7 @@ class TextBox: public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
 // Constructors
-    TextBox(QString textValue, bool editable, QGraphicsItem* parent=NULL);
+    TextBox(QString textValue, bool editable, QGraphicsItem * parent=NULL);
 
 // Getters
     QString getText();
@@ -21,7 +21,7 @@ public:
     void setEditable(bool edit);
 
 // Public methods
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
 // Public members
 

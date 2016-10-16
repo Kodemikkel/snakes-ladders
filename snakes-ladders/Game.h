@@ -25,6 +25,11 @@ public:
     void resizeEvent(QResizeEvent * event);
     void displayMainMenu();
     void spawnPiece();
+    void generateList(QStringList list,
+                      bool ordered,
+                      int posX = 0,
+                      int posY = 0,
+                      int posYFactor = 0, QGraphicsItem * parent = NULL);
 
 // Public members
     Board * board;
@@ -43,6 +48,7 @@ public slots:
     void displayPlayerSelect();
     void displayMatchConfig(int players);
     void back();
+    void displayHowTo();
     void displayOptions();
 
 private:
@@ -63,6 +69,10 @@ private:
     Button * startButton;
     QSignalMapper * signalMapper;
     QGraphicsRectItem * playerListBox;
+    Container * howToContainer;
+    QGraphicsTextItem * howToTitle;
+    Container * rulesContainer;
+    QGraphicsTextItem * rulesTitle;
 };
 
 #endif // GAME_H
