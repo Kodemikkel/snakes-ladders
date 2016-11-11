@@ -74,6 +74,18 @@ public:
     int theme = 1;
     float scale;
     std::fstream file;
+    QStringList instructions = (QStringList()
+        << "Press the start button in main menu"
+        << "Choose the number of players"
+        << "Pick a face and a name for each player and lock the selection"
+        << "When everybody have lockes their selection, press start"
+        << "The first player have to roll the dice by clicking on it"
+        << "When the face have moved to the correct position, it is the \n"
+           "next players turn to roll the dice"
+        << "If pause is neccesary, press the pause button at the top right"
+        << "To start the game again, press continue"
+        << "Current players turn is indicated right next to the timer at \n"
+           "the top right");
 
 private:
     QBrush brush;
